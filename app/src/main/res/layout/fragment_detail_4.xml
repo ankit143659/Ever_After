@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Who would you like to \nmeet?"
+        android:textSize="24sp"
+        android:fontFamily="@font/font1"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/instructionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font1"
+        android:text="You choose more than one answer and change\n it any time."
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="24dp"
+        android:gravity="start"/>
+
+
+
+    <!-- Woman Option -->
+    <LinearLayout
+        android:id="@+id/optionWoman"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvWoman"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:layout_weight="1"
+            android:fontFamily="@font/font1"
+            android:text="Woman"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
+
+        <RadioButton
+            android:id="@+id/radioWoman"
+            android:layout_width="wrap_content"
+            android:button="@drawable/check_box"
+            android:layout_height="wrap_content"
+            android:buttonTint="@color/black"/>
+    </LinearLayout>
+
+    <!-- Man Option -->
+    <LinearLayout
+        android:id="@+id/optionMan"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvMan"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:fontFamily="@font/font1"
+            android:text="Man"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
+
+        <RadioButton
+            android:id="@+id/radioMan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/check_box"
+            android:buttonTint="@color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/optionAll"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:id="@+id/tvAll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:text="All"
+            android:fontFamily="@font/font1"
+            android:textSize="16sp"
+            android:textColor="#000000"/>
+
+        <RadioButton
+            android:id="@+id/radioAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/check_box"
+            android:buttonTint="@color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_width="20dp"
+            android:src="@drawable/baseline_remove_red_eye_24"
+            android:layout_height="20dp">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/instructionText223"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/font1"
+            android:layout_marginLeft="10dp"
+            android:text="You'll only be shown to people looking to date \nyour gender"
+            android:textSize="16sp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="24dp"
+            android:gravity="start"/>
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

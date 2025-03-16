@@ -1,0 +1,68 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="16dp"
+    android:background="@color/black">
+
+    <!-- Logo Image -->
+    <ImageView
+        android:id="@+id/logo"
+        android:layout_width="350dp"
+        android:layout_height="350dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/logoo"
+        android:scaleType="fitCenter"/>
+
+    <!-- Login Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogin"
+        android:layout_width="280dp"
+        android:layout_height="50dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/logo"
+        android:layout_marginTop="40dp"
+        android:text="Login"
+        android:textSize="20sp"
+        android:textColor="@color/white"
+        android:fontFamily="@font/font1"
+        app:backgroundTint="@null"
+        app:cornerRadius="12dp"
+        android:background="@drawable/btn_bg"/>
+
+
+    <!-- Registration Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        android:layout_width="280dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
+        android:layout_below="@id/btnLogin"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/btn_bg"
+        android:text="Register"
+        android:textSize="20sp"
+        android:fontFamily="@font/font1"
+        app:backgroundTint="@null"
+        app:cornerRadius="12dp"
+        android:textColor="@color/white" />
+
+    <!-- Google Login Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGoogle"
+        android:layout_width="280dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="50dp"
+        android:layout_below="@id/btnRegister"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/google"
+        android:text="Continue with Google"
+        android:textSize="18sp"
+        app:backgroundTint="@null"
+        app:cornerRadius="12dp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/font1"
+        android:drawableLeft="@drawable/ic_google"
+        android:drawablePadding="16dp"/>
+</RelativeLayout>

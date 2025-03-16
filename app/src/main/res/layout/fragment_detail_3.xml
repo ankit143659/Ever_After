@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/headerText"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/font1"
+        android:layout_height="wrap_content"
+        android:text="What brings you to Ever \nAfter?"
+        android:textSize="24sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/instructionText"
+        android:layout_width="wrap_content"
+        android:fontFamily="@font/font1"
+        android:layout_height="wrap_content"
+        android:text="Romance and butterflies or a beautiful \nfriendship? Choose a mode to find your people."
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:layout_marginBottom="24dp"
+        android:gravity="start"/>
+
+
+
+    <!-- Woman Option -->
+
+    <LinearLayout
+        android:id="@+id/optioDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="18dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:id="@+id/l1"
+            android:layout_height="30dp"
+            android:background="@drawable/radio_unselected_bg"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvdate"
+                android:layout_width="0dp"
+                android:fontFamily="@font/font1"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Date"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
+
+            <RadioButton
+                android:id="@+id/radioDate"
+                android:layout_width="wrap_content"
+                android:button="@drawable/check_box"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/black"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/instructionText3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8dp"
+            android:text="Find a relationship, something casual, or\nanything in-between"
+            android:fontFamily="@font/font1"
+            android:textSize="15sp"
+            android:textColor="#737070"
+            android:gravity="start"/>
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/optionBff"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="18dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/radio_unselected_bg"
+            android:orientation="horizontal"
+            android:id="@+id/l2"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvbff"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="BFF"
+                android:fontFamily="@font/font1"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:textColor="#000000"/>
+
+            <RadioButton
+                android:id="@+id/radiobff"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@drawable/check_box"
+                android:buttonTint="@color/black"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/instructionText12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="8dp"
+            android:text="Make a new friends and find your\ncommunnity"
+            android:textSize="15sp"
+            android:fontFamily="@font/font1"
+            android:textColor="#737070"
+            android:gravity="start"/>
+
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/optionbizz"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/radio_unselected_bg"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:padding="18dp"
+        android:layout_marginBottom="8dp">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:background="@drawable/radio_unselected_bg"
+            android:orientation="horizontal"
+            android:id="@+id/l3"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/tvWoman"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bizz"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:fontFamily="@font/font1"
+                android:textColor="#000000"/>
+
+            <RadioButton
+                android:id="@+id/radioBizz"
+                android:button="@drawable/check_box"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/black"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/instructionText1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/font1"
+            android:lineSpacingExtra="8dp"
+            android:text="Network professionally and make \ncareer moves"
+            android:textSize="15sp"
+            android:textColor="#737070"
+            android:gravity="start"/>
+
+
+    </LinearLayout>
+
+</LinearLayout>
