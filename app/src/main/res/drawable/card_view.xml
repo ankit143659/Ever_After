@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Shadow Effect -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp"/>
+            <solid android:color="#66B0B0B0"/> <!-- Light Grey Shadow -->
+        </shape>
+    </item>
+
+    <!-- Gradient Glassmorphism Effect -->
+    <item>
+        <shape android:shape="rectangle">
+            <corners android:radius="20dp"/>
+            <gradient
+                android:angle="45"
+                android:startColor="@color/white"
+                android:endColor="#A0A0A0"
+                android:type="linear"/>
+            <solid android:color="#99FFFFFF"/> <!-- Semi-transparent overlay -->
+        </shape>
+    </item>
+
+</layer-list>

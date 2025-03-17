@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Ever ❤️ After"
+        android:fontFamily="@font/font1"
+        android:textSize="35sp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/logo"
+        android:layout_marginTop="70dp"
+        android:textColor="@color/white"
+        android:layout_height="wrap_content">
+
+    </TextView>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/logo"
+        android:id="@+id/frame"
+        android:layout_marginTop="20dp"
+        android:background="@color/black">
+
+        <!-- Card Layout for Form -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:padding="20dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:cardBackgroundColor="@android:color/transparent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:padding="20dp"
+                android:background="@drawable/card_view"
+                android:layout_height="wrap_content">
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/tvTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Registration"
+                    android:fontFamily="@font/font1"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="10dp"/>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/nameLyout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name"
+                    app:boxStrokeColor="#6200EE"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    android:fontFamily="@font/font1"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    android:layout_below="@id/tvTitle"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/name"
+                        android:layout_width="match_parent"
+                        android:fontFamily="@font/font1"
+                        android:background="@drawable/edittext_bg"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="#999"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/phoneLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Phone no"
+                    app:boxStrokeColor="#6200EE"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    android:fontFamily="@font/font1"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    android:layout_below="@id/nameLyout"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPhone"
+                        android:layout_width="match_parent"
+                        android:fontFamily="@font/font1"
+                        android:background="@drawable/edittext_bg"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="#999"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Email & Password Fields -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/emailLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    app:boxStrokeColor="#6200EE"
+                    app:boxCornerRadiusTopStart="8dp"
+                    app:hintTextColor="@color/white"
+                    android:textColorHint="@color/white"
+                    app:boxCornerRadiusTopEnd="8dp"
+                    android:fontFamily="@font/font1"
+                    app:boxCornerRadiusBottomStart="8dp"
+                    app:boxCornerRadiusBottomEnd="8dp"
+                    android:layout_below="@id/phoneLayout"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etEmail"
+                        android:layout_width="match_parent"
+                        android:fontFamily="@font/font1"
+                        android:background="@drawable/edittext_bg"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        android:textColorHint="#999"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Password Input Field -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/passwordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    app:passwordToggleEnabled="true"
+                    android:textColorHint="@color/white"
+                    app:hintTextColor="@color/white"
+                    app:passwordToggleTint="@color/white"
+                    android:fontFamily="@font/font1"
+                    app:boxStrokeColor="#6200EE"
+                    android:layout_below="@id/emailLayout"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etPassword"
+                        android:layout_width="match_parent"
+                        android:fontFamily="@font/font1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:background="@drawable/edittext_bg"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/cpasswordLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirm Password"
+                    app:passwordToggleEnabled="true"
+                    android:textColorHint="@color/white"
+                    app:hintTextColor="@color/white"
+                    app:passwordToggleTint="@color/white"
+                    android:fontFamily="@font/font1"
+                    app:boxStrokeColor="#6200EE"
+                    android:layout_below="@id/passwordLayout"
+                    android:layout_marginTop="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etCPassword"
+                        android:layout_width="match_parent"
+                        android:fontFamily="@font/font1"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:background="@drawable/edittext_bg"
+                        android:inputType="textPassword"/>
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <!-- Login Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="Registration"
+                    android:fontFamily="@font/font1"
+                    android:textSize="22sp"
+                    android:background="@drawable/btn_bg"
+                    app:backgroundTint="@null"
+                    app:cornerRadius="12dp"
+                    android:textColor="@android:color/white"
+                    android:layout_below="@id/cpasswordLayout"
+                    android:layout_marginTop="20dp"/>
+
+                <TextView
+                    android:id="@+id/tvForgotPassword2323"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Already have an account? Sing up"
+                    android:fontFamily="@font/font1"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginRight="50dp"
+                    android:layout_below="@id/btnLogin"
+                    android:layout_marginTop="10dp"/>
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Lottie Animation on Top of CardView -->
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lotti"
+            android:layout_width="100dp"
+            android:layout_height="400dp"
+            android:layout_gravity="start"
+            android:layout_marginTop="-40dp"
+            android:layout_marginLeft="20dp"
+            app:lottie_fileName="anim3.json"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_speed="1.2"
+            android:elevation="5dp"/>
+
+    </FrameLayout>
+
+
+</RelativeLayout>

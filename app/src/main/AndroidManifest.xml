@@ -13,6 +13,12 @@
         android:theme="@style/Theme.Ever_After"
         tools:targetApi="31">
         <activity
+            android:name=".Registration"
+            android:exported="false" />
+        <activity
+            android:name=".login_page"
+            android:exported="false" />
+        <activity
             android:name=".detailsPage"
             android:exported="false" />
         <activity
