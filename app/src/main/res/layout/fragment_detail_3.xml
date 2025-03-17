@@ -69,8 +69,8 @@
                 android:id="@+id/radioDate"
                 android:layout_width="wrap_content"
                 android:button="@drawable/check_box"
-                android:layout_height="wrap_content"
-                android:buttonTint="@color/black"/>
+                android:buttonTint="@null"
+                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <TextView
