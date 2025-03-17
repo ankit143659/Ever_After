@@ -25,7 +25,16 @@
         android:text="Which qualities speak to your soul? Choose 5 that whould make a connection that much stronger."
         android:textSize="16sp"
         android:textColor="#D7D5D5"
-        android:layout_marginBottom="12dp"/>
+        android:layout_marginBottom="32dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font1"
+        android:text="Their qulities"
+        android:textSize="16sp"
+        android:textColor="#D7D5D5"
+        />
 
 
     <!-- Interests List -->

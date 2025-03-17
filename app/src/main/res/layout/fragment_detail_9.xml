@@ -1,0 +1,78 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/black">
+
+    <!-- Title Text -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Let's talk about your lifestyle and habits"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/font1"
+        android:textColor="@color/white"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/font1"
+        android:text="Share as much about your habits as you're \nconfortable with"
+        android:textSize="16sp"
+        android:textColor="#D7D5D5"
+        android:layout_marginBottom="32dp"/>
+
+   <androidx.core.widget.NestedScrollView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+       <LinearLayout
+           android:layout_width="match_parent"
+           android:orientation="vertical"
+           android:layout_height="wrap_content">
+           <!-- Subtitle -->
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/font1"
+               android:text="Drinking"
+               android:textSize="16sp"
+               android:textColor="#D7D5D5"
+               />
+
+
+           <!-- Interests List -->
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/recyclerView"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="16dp"/>
+
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:fontFamily="@font/font1"
+               android:text="Smoking"
+               android:layout_marginTop="20dp"
+               android:textSize="16sp"
+               android:textColor="#D7D5D5"
+               />
+
+
+           <!-- Interests List -->
+           <androidx.recyclerview.widget.RecyclerView
+               android:id="@+id/recyclerView2"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_marginTop="16dp"/>
+
+
+       </LinearLayout>
+
+   </androidx.core.widget.NestedScrollView>
+</LinearLayout>
