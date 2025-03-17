@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#F8B706"/> <!-- Yellow Background -->
+    <solid android:color="@color/chip_selected"/> <!-- Yellow Background -->
     <corners android:radius="16dp"/>
 </shape>
