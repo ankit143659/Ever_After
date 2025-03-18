@@ -1,6 +1,8 @@
 package com.example.ever_after
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ProgressBar
@@ -32,12 +34,23 @@ class detailsPage : AppCompatActivity() {
         updateProgressBar(0)
 
         nextBtn.setOnClickListener{
-            val currentItem = viewPager2.currentItem
-            if (currentItem<total_pages-1){
-                viewPager2.setCurrentItem(currentItem+1,true)
-                updateProgressBar(currentItem+1)
+            Log.d("CurrentPage",viewPager2.currentItem.toString())
+            if (viewPager2.currentItem==12){
+                val intent = Intent(this,BottomNavigation::class.java)
+                startActivity(intent)
+            }else{
+                val currentItem = viewPager2.currentItem
+                if (currentItem<total_pages-1){
+                    viewPager2.setCurrentItem(currentItem+1,true)
+                    updateProgressBar(currentItem+1)
+                }
             }
+
         }
+
+
+
+
 
 
 
