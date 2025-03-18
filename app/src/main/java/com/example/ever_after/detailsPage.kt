@@ -14,7 +14,7 @@ class detailsPage : AppCompatActivity() {
     private lateinit var viewPager2: ViewPager2
     private lateinit var progressBar: ProgressBar
     private lateinit var nextBtn : ImageButton
-    private val total_pages = 12
+    private val total_pages = 13
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
