@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "984074887733",
+    "project_id": "ever-after-d365b",
+    "storage_bucket": "ever-after-d365b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984074887733:android:94776d55a5c2b5d1b8877c",
+        "android_client_info": {
+          "package_name": "com.example.ever_after"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "984074887733-bq9sh6r7d26imbmodkr1175a3b6v5dbh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6IMIYGtl1IQ4O6Aasi0BejcyIAAIl9c8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "984074887733-bq9sh6r7d26imbmodkr1175a3b6v5dbh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
