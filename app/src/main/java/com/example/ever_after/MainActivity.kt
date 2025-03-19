@@ -15,12 +15,14 @@ import com.airbnb.lottie.LottieAnimationView
 class MainActivity : AppCompatActivity() {
     private lateinit var video : VideoView
     private lateinit var lottieAnimationView: LottieAnimationView
+    private lateinit var share : SharePrefrence
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_main)
 
+        share = SharePrefrence(this)
         video = findViewById(R.id.video)
         lottieAnimationView = findViewById(R.id.lotiieee)
         lottieAnimationView.playAnimation()
@@ -30,9 +32,16 @@ class MainActivity : AppCompatActivity() {
         video.start()
 
         video.setOnCompletionListener {
-            val i = Intent(this,LoginPage::class.java)
-            startActivity(i)
+            if (share.checkLoginState()){
+                val i = Intent(this,detailsPage::class.java)
+                startActivity(i)
+            } else{
+                val i = Intent(this,LoginPage::class.java)
+                startActivity(i)
+            }
         }
+
+
 
     }
 }

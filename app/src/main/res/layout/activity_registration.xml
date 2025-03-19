@@ -5,6 +5,21 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lodingLottiee"
+        android:layout_width="200dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        app:lottie_fileName="anim4.json"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        android:visibility="gone"
+        app:lottie_speed="1.2"
+        android:elevation="5dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:text="Ever ❤️ After"
@@ -83,7 +98,7 @@
                         android:textColor="@color/white"
                         android:textCursorDrawable="@drawable/cursor"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textPersonName"
                         android:textColorHint="#999"/>
                 </com.google.android.material.textfield.TextInputLayout>
                 <com.google.android.material.textfield.TextInputLayout
@@ -110,7 +125,7 @@
                         android:textColor="@color/white"
                         android:textCursorDrawable="@drawable/cursor"
                         android:layout_height="wrap_content"
-                        android:inputType="textEmailAddress"
+                        android:inputType="phone"
                         android:textColorHint="#999"/>
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -196,7 +211,7 @@
 
                 <!-- Login Button -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnLogin"
+                    android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:text="Registration"
@@ -219,7 +234,7 @@
                     android:textColor="@color/black"
                     android:layout_centerHorizontal="true"
                     android:layout_marginRight="50dp"
-                    android:layout_below="@id/btnLogin"
+                    android:layout_below="@id/btnRegister"
                     android:layout_marginTop="10dp"/>
 
             </RelativeLayout>
