@@ -18,15 +18,4 @@ class SharePrefrence(context: Context){
         return prefs.getBoolean("loginState",false)
     }
 
-    fun saveData(key: String, value: String) {
-        prefs.edit().putString(key, value).apply()
-    }
-
-    fun getData(key: String): String? {
-        return prefs.getString(key, null)
-    }
-
-    fun clearData() {
-        prefs.edit().clear().apply()
-    }
 }
