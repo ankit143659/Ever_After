@@ -102,9 +102,22 @@ class detailsPage : AppCompatActivity() {
                         Toast.makeText(this,"Please select your Height",Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
+                }else if (currentFragment is detail_7) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_8) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
                 }
 
-                if (viewPager2.currentItem == 12) {
+
+                    if (viewPager2.currentItem == 12) {
                     loadingDialog.dismiss()
                     val intent = Intent(this, BottomNavigation::class.java)
                     startActivity(intent)

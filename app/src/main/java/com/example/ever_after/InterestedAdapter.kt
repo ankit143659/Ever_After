@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 
-class InterestsAdapter(private val interests: List<String>,private val maxSelection : Int) :
+class InterestsAdapter(private val interests: List<String>,private val maxSelection : Int,private val viewModel: dataViewModel? = null,private val lifecycleOwner: LifecycleOwner? = null,private val name : String?=null) :
     RecyclerView.Adapter<InterestsAdapter.ViewHolder>() {
 
-    private val selectedItems = mutableSetOf<String>()
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val chip: Chip = view.findViewById(R.id.chip)
@@ -28,25 +28,22 @@ class InterestsAdapter(private val interests: List<String>,private val maxSelect
         holder.chip.text = item
 
         // Set initial state
-        updateChipStyle(holder.chip, item)
-
-        // Click Listener
-        holder.chip.setOnClickListener {
-            if (selectedItems.contains(item)) {
-                selectedItems.remove(item)
-            } else {
-                if (selectedItems.size < maxSelection) {
-                    selectedItems.add(item)
-                }
+        if (lifecycleOwner != null) {
+            viewModel?.selectedInterests?.observe(lifecycleOwner) { selectedItems ->
+                updateChipStyle(holder.chip, item, selectedItems)
             }
-            updateChipStyle(holder.chip, item)
-            notifyItemChanged(position)
+        }
+
+        holder.chip.setOnClickListener {
+            if (name != null) {
+                viewModel?.toggleInterest(item, maxSelection,name)
+            }  // ViewModel ko update bhejo
         }
     }
 
     override fun getItemCount(): Int = interests.size
 
-    private fun updateChipStyle(chip: Chip, item: String) {
+    private fun updateChipStyle(chip: Chip, item: String, selectedItems: Set<String>) {
         val context = chip.context
 
         if (selectedItems.contains(item)) {
