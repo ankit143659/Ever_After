@@ -7,8 +7,10 @@ import androidx.lifecycle.ViewModel
 class dataViewModel : ViewModel() {
     private val _name = MutableLiveData<String>()
     private val _gender = MutableLiveData<String>()
+    private val _purpose = MutableLiveData<String>()
     val name: LiveData<String> get() = _name
     val gender: LiveData<String> get() = _gender
+    val purpose: LiveData<String> get() = _purpose
 
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> get() = _date
@@ -38,4 +40,17 @@ class dataViewModel : ViewModel() {
     fun gendervalueSelected():Boolean{
         return !(_gender.value.isNullOrEmpty())
     }
+
+
+    fun updatePurpose(purpose:String){
+        if (purpose.isNotBlank()){
+            _purpose.value = purpose
+        }
+    }
+
+    fun purposeValue():Boolean{
+        return !(_purpose.value.isNullOrEmpty())
+    }
+
+
 }

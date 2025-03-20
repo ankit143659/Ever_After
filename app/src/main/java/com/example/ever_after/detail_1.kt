@@ -93,7 +93,7 @@ class detail_1 : Fragment() {
                     val dateValue = "${dd.text}/${mm.text}/${yy.text}"
                     viewModel.updateDate(dd.text.toString(), mm.text.toString(), yy.text.toString())
                     dateError.visibility = View.GONE
-                    database.child("date").setValue(dateValue)  // Firebase me real-time update
+                    database.child("DOB").setValue(dateValue)  // Firebase me real-time update
                 }
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}

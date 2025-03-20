@@ -1,5 +1,6 @@
 package com.example.ever_after
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -16,7 +17,8 @@ class BottomNavigation : AppCompatActivity() {
 
         // Set Toolbar as ActionBar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)  // This must be called before setupActionBarWithNavController()
+        setSupportActionBar(toolbar)
+
 
         // Set up Navigation Controller
         val navController = findNavController(R.id.nav_host_fragment_activity_bottom_navigation)

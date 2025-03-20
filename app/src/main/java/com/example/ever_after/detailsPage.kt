@@ -63,6 +63,12 @@ class detailsPage : AppCompatActivity() {
                         Toast.makeText(this,"Please Select gender",Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
+                }else if (currentFragment is detail_3){
+                    if (!viewModel.purposeValue()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select Puspose",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
                 }
 
                 if (viewPager2.currentItem == 12) {
