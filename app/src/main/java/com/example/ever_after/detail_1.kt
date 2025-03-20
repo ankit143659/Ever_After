@@ -25,6 +25,8 @@ class detail_1 : Fragment() {
     private lateinit var nameError: TextView
     private lateinit var dateError: TextView
 
+    private lateinit var sharePrefrence: SharePrefrence
+
     private val viewModel: dataViewModel by activityViewModels()
 
     private lateinit var database: DatabaseReference
@@ -36,6 +38,8 @@ class detail_1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_detail_1, container, false)
+
+        sharePrefrence = SharePrefrence(requireContext())
 
         name = view.findViewById(R.id.etFirstName)
         dd = view.findViewById(R.id.dd)
@@ -63,6 +67,7 @@ class detail_1 : Fragment() {
                 if (nameValue.isNotEmpty()) {
                     viewModel.updateName(nameValue)
                     nameError.visibility = View.GONE
+                    sharePrefrence.name(nameValue)
                     database.child("name").setValue(nameValue)  // Firebase me real-time store
                 }
             }

@@ -18,4 +18,14 @@ class SharePrefrence(context: Context){
         return prefs.getBoolean("loginState",false)
     }
 
+    fun name(name : String){
+        val editor = prefs.edit()
+        editor.putString("name",name)
+        editor.apply()
+    }
+
+    fun getName() : String? {
+        return prefs.getString("name","")
+    }
+
 }

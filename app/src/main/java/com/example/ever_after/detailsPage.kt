@@ -16,6 +16,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.airbnb.lottie.LottieAnimationView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 class detailsPage : AppCompatActivity() {
     private lateinit var viewPager2: ViewPager2
@@ -25,6 +28,9 @@ class detailsPage : AppCompatActivity() {
     private lateinit var viewModel: dataViewModel
 
     private lateinit var loadingDialog : Dialog
+
+    private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +42,16 @@ class detailsPage : AppCompatActivity() {
         viewPager2 = findViewById(R.id.viewPager)
         progressBar = findViewById(R.id.progressBar)
         nextBtn = findViewById(R.id.btnNext)
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid  // Current User ka UID
+            database = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Details")
+        } else {
+            database = FirebaseDatabase.getInstance().getReference("Users").child("Unknown")
+        }
 
         setupLoadingDialog()
         val adapter = ViewPagerAdapter(this)
@@ -66,7 +82,24 @@ class detailsPage : AppCompatActivity() {
                 }else if (currentFragment is detail_3){
                     if (!viewModel.purposeValue()){
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select Puspose",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_4){
+                    if (!viewModel.genderMeetiing()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_5){
+                    viewModel.selectedOptions.observe(this){selectedList ->
+                        Log.d("List","$selectedList")
+                        database.child("Hope").setValue(selectedList)
+                    }
+                }else if (currentFragment is detail_6){
+                    if (!viewModel.checkHeight()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please select your Height",Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
                 }

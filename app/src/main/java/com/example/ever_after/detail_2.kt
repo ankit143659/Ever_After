@@ -26,6 +26,9 @@ class detail_2 : Fragment() {
     private lateinit var woman : TextView
     private lateinit var other : TextView
     private lateinit var man : TextView
+    private lateinit var headerText : TextView
+
+    private lateinit var sharePrefrence: SharePrefrence
 
 
     private val viewModel: dataViewModel by activityViewModels()
@@ -41,6 +44,10 @@ class detail_2 : Fragment() {
         // Inflate the layout for this fragment
         val view =  inflater.inflate(R.layout.fragment_detail_2, container, false)
 
+        sharePrefrence = SharePrefrence(requireContext())
+
+        headerText = view.findViewById(R.id.headerText)
+        headerText.setText("${sharePrefrence.getName()} is a great name")
         database = FirebaseDatabase.getInstance().getReference("Users")
 
         auth = FirebaseAuth.getInstance()

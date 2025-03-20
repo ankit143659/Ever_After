@@ -44,7 +44,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvWoman"
+            android:id="@+id/text1"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -74,7 +74,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvMan"
+            android:id="@+id/text2"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -103,7 +103,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvAll23"
+            android:id="@+id/text3"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -132,7 +132,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvAll2323"
+            android:id="@+id/text4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -161,7 +161,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvAll343434"
+            android:id="@+id/text5"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -189,7 +189,7 @@
         android:layout_marginBottom="8dp">
 
         <TextView
-            android:id="@+id/tvAll"
+            android:id="@+id/text6"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

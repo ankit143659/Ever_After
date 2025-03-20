@@ -14,10 +14,19 @@ import android.widget.EditText
 import android.widget.NumberPicker
 import android.widget.TextView
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 
 class detail_6 : Fragment() {
 
+
+    private val viewModel: dataViewModel by activityViewModels()
+
+    private lateinit var database: DatabaseReference
+    private lateinit var auth: FirebaseAuth
 
     @SuppressLint("SoonBlockedPrivateApi")
     override fun onCreateView(
@@ -28,6 +37,16 @@ class detail_6 : Fragment() {
         val view =  inflater.inflate(R.layout.fragment_detail_6, container, false)
 
         val numberPicker = view.findViewById<NumberPicker>(R.id.numberPicker)
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid  // Current User ka UID
+            database = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Details")
+        } else {
+            database = FirebaseDatabase.getInstance().getReference("Users").child("Unknown")
+        }
 
         numberPicker.minValue=100
         numberPicker.maxValue=200
@@ -48,7 +67,9 @@ class detail_6 : Fragment() {
         }
 
         numberPicker.setOnValueChangedListener{_,_,newVal->
-            Toast.makeText(requireContext(),"$newVal",Toast.LENGTH_SHORT).show()
+            val text = newVal
+            viewModel.updateHeight(text.toString())
+            database.child("Height").setValue(text.toString())
         }
 
         return view

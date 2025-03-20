@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.fragment.app.activityViewModels
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 
 
 class detail_4 : Fragment() {
@@ -25,12 +29,26 @@ class detail_4 : Fragment() {
     private lateinit var l2 :  TextView
     private lateinit var l3 :  TextView
 
+    private lateinit var database: DatabaseReference
+    private val viewModel: dataViewModel by activityViewModels()
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        database = FirebaseDatabase.getInstance().getReference("Users")
+
+        auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+
+        if (currentUser != null) {
+            val userId = currentUser.uid  // Current User ka UID
+            database = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Details")
+        } else {
+            database = FirebaseDatabase.getInstance().getReference("Users").child("Unknown")
+        }
         return inflater.inflate(R.layout.fragment_detail_4, container, false)
     }
 
@@ -66,6 +84,9 @@ class detail_4 : Fragment() {
                         if (isSelected) R.drawable.radio_selected_bg else R.drawable.radio_unselected_bg
                     )
                 }
+                val text = layouts2[i].text.toString()
+                viewModel.genderMeet(text)
+                database.child("MeetingPerson").setValue(text)
             }
             layouts[i].setOnClickListener {
                 for (j in radioButtons.indices) {
@@ -78,6 +99,9 @@ class detail_4 : Fragment() {
                         if (isSelected) R.drawable.radio_selected_bg else R.drawable.radio_unselected_bg
                     )
                 }
+                val text = layouts2[i].text.toString()
+                viewModel.genderMeet(text)
+                database.child("MeetingPerson").setValue(text)
             }
 
             layouts2[i].setOnClickListener {
@@ -91,6 +115,9 @@ class detail_4 : Fragment() {
                         if (isSelected) R.drawable.radio_selected_bg else R.drawable.radio_unselected_bg
                     )
                 }
+                val text = layouts2[i].text.toString()
+                viewModel.genderMeet(text)
+                database.child("MeetingPerson").setValue(text)
             }
         }
     }

@@ -8,9 +8,15 @@ class dataViewModel : ViewModel() {
     private val _name = MutableLiveData<String>()
     private val _gender = MutableLiveData<String>()
     private val _purpose = MutableLiveData<String>()
+    private val _meetGender = MutableLiveData<String>()
+    private val _height = MutableLiveData<String>()
+    private val _selectedOptions = MutableLiveData<List<String>>()  // Store selected options
+    val selectedOptions: LiveData<List<String>> = _selectedOptions
     val name: LiveData<String> get() = _name
     val gender: LiveData<String> get() = _gender
     val purpose: LiveData<String> get() = _purpose
+    val genderMeeet: LiveData<String> get() = _meetGender
+    val height : LiveData<String> get() = _height
 
     private val _date = MutableLiveData<String>()
     val date: LiveData<String> get() = _date
@@ -50,6 +56,30 @@ class dataViewModel : ViewModel() {
 
     fun purposeValue():Boolean{
         return !(_purpose.value.isNullOrEmpty())
+    }
+
+    fun genderMeet(meet:String){
+        if (meet.isNotBlank()){
+            _meetGender.value = meet
+        }
+    }
+
+    fun genderMeetiing():Boolean{
+        return !(_meetGender.value.isNullOrEmpty())
+    }
+
+    fun updateHope(option : List<String>){
+        _selectedOptions.value = option
+    }
+
+    fun updateHeight(heightt : String){
+        if (heightt.isNotBlank()){
+            _height.value = heightt
+        }
+    }
+
+    fun checkHeight() : Boolean{
+        return !(_height.value.isNullOrEmpty())
     }
 
 
