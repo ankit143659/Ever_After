@@ -1,7 +1,7 @@
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:padding="16dp"
     android:background="@android:color/black">
@@ -32,18 +32,85 @@
         android:layout_height="wrap_content"
         android:columnCount="3"
         android:rowCount="2"
+        android:layout_gravity="center"
         android:alignmentMode="alignMargins"
         android:useDefaultMargins="true"
         android:padding="4dp">
 
-        <!-- Image Slots -->
-        <include layout="@layout/image_placeholder"/>
-        <include layout="@layout/image_placeholder"/>
-        <include layout="@layout/image_placeholder"/>
-        <include layout="@layout/image_placeholder"/>
-        <include layout="@layout/image_placeholder"/>
-        <include layout="@layout/image_placeholder"/>
+        <ImageView
+            android:layout_width="70dp"
+            android:id="@+id/img1"
+            android:visibility="visible"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:src="@drawable/baseline_add_24"
+            android:scaleType="centerCrop"
+            android:background="@drawable/edittext_bg"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:id="@+id/img2"
+            android:background="@drawable/edittext_bg"
+            android:src="@drawable/baseline_add_24"
+            app:tint="@color/white" />
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/img3"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/edittext_bg"
+            android:src="@drawable/baseline_add_24"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:id="@+id/img4"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/edittext_bg"
+            android:src="@drawable/baseline_add_24"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:id="@+id/img5"
+            android:layout_height="70dp"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/edittext_bg"
+            android:src="@drawable/baseline_add_24"
+            app:tint="@color/white" />
+
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id="@+id/img6"
+            android:layout_marginRight="10dp"
+            android:scaleType="fitXY"
+            android:background="@drawable/edittext_bg"
+            android:src="@drawable/baseline_add_24"
+            app:tint="@color/white" />
     </GridLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSelectImage"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Select Image"
+        android:layout_gravity="center"
+        android:fontFamily="@font/font1"
+        android:textSize="18sp"
+        android:background="@drawable/btn_bg"
+        app:backgroundTint="@null"
+        app:cornerRadius="12dp"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="20dp"/>
 
 
 

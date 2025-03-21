@@ -66,7 +66,7 @@ class detailsPage : AppCompatActivity() {
             Handler().postDelayed({
                 Log.d("CurrentPage", viewPager2.currentItem.toString())
                 val currentFragment = supportFragmentManager.findFragmentByTag("f" + viewPager2.currentItem)
-                if (currentFragment is detail_1) {
+               /* if (currentFragment is detail_1) {
                     if (!viewModel.isDataValid()) {
                         loadingDialog.dismiss()
                         currentFragment.requireView().findViewById<TextView>(R.id.nameError).visibility = View.VISIBLE
@@ -114,8 +114,31 @@ class detailsPage : AppCompatActivity() {
                         Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }
-
+                }else if (currentFragment is detail_9) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_10) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_11) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }else if (currentFragment is detail_12) {
+                    if (!viewModel.checkInterest()){
+                        loadingDialog.dismiss()
+                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                }*/
 
                     if (viewPager2.currentItem == 12) {
                     loadingDialog.dismiss()

@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -23,6 +24,8 @@ class detail_9 : Fragment() {
         "yes, I smoke", "I smoke sometimes","No, I don't smoke"
     )
 
+    private lateinit var viewModel: dataViewModel
+
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -32,16 +35,18 @@ class detail_9 : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_detail_9, container, false)
 
+        viewModel = ViewModelProvider(this).get(dataViewModel::class.java)
+
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView2 = view.findViewById(R.id.recyclerView2)
 
         recyclerView.layoutManager = GridLayoutManager(context,1)
         recyclerView2.layoutManager = GridLayoutManager(context,1)
 
-        var adapter = InterestsAdapter(interest,1)
+        var adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"DrinkingStatus")
         recyclerView.adapter=adapter
 
-        adapter = InterestsAdapter(interest2,1)
+        adapter = InterestsAdapter(interest2,1,viewModel,requireActivity(),"SmokingStatus")
         recyclerView2.adapter = adapter
 
 
