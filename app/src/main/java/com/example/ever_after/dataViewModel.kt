@@ -1,5 +1,7 @@
 package com.example.ever_after
 
+import android.graphics.Bitmap
+import android.util.Base64
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -7,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import java.io.ByteArrayOutputStream
 
 class dataViewModel : ViewModel() {
     private val _name = MutableLiveData<String>()
@@ -28,7 +31,36 @@ class dataViewModel : ViewModel() {
     private val _selectedInterests = MutableLiveData<MutableSet<String>>(mutableSetOf())
     val selectedInterests: LiveData<MutableSet<String>> = _selectedInterests
 
-      // Maximum 2 interests select ho sakte hain
+    private val _imageBitmaps = MutableLiveData<List<String>>(emptyList())
+    val imageBitmaps: LiveData<List<String>> get() = _imageBitmaps
+
+    fun updateImages(newImages: List<String>) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val userId = currentUser?.uid ?: "Unknown"
+        val databaseRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Images")
+
+        // Get existing images or create an empty list
+        val currentList = _imageBitmaps.value?.toMutableList() ?: mutableListOf()
+
+        // Ensure max 6 images - remove oldest if needed
+        val totalImages = (currentList + newImages).takeLast(6)
+
+        _imageBitmaps.value = totalImages
+
+        // Optimize Firebase update - Only update changed images
+        val imageMap = totalImages.mapIndexed { index, img -> "Image${index + 1}" to img }.toMap()
+        databaseRef.updateChildren(imageMap) // 🔥 Faster than `setValue()`
+    }
+
+/*
+    // Function to convert Bitmap to Base64 String
+    private fun bitmapToBase64(bitmap: Bitmap): String {
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        val byteArray = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+    }*/
+
 
     fun toggleInterest(item: String, maxSelection: Int,name : String) {
         auth = FirebaseAuth.getInstance()
@@ -131,6 +163,10 @@ class dataViewModel : ViewModel() {
 
     fun  checkInterest() : Boolean{
         return _selectedInterests.value.isNullOrEmpty()
+    }
+
+    fun checkImage() : Boolean{
+        return _imageBitmaps.value.isNullOrEmpty()
     }
 
 

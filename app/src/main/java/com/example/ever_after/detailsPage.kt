@@ -140,7 +140,7 @@ class detailsPage : AppCompatActivity() {
                     }
                 }*/
 
-                    if (viewPager2.currentItem == 12) {
+                if (viewPager2.currentItem == 12) {
                     loadingDialog.dismiss()
                     val intent = Intent(this, BottomNavigation::class.java)
                     startActivity(intent)
