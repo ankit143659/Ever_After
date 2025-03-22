@@ -28,4 +28,14 @@ class SharePrefrence(context: Context){
         return prefs.getString("name","")
     }
 
+    fun DetailState(State : Boolean){
+        val editor = prefs.edit()
+        editor.putBoolean("detailState",State)
+        editor.apply()
+    }
+
+    fun checkDetailState():Boolean{
+        return prefs.getBoolean("detailState",false)
+    }
+
 }

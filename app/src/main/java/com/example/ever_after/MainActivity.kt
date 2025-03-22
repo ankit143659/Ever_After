@@ -32,10 +32,14 @@ class MainActivity : AppCompatActivity() {
         video.start()
 
         video.setOnCompletionListener {
-            if (share.checkLoginState()){
+            if (share.checkLoginState() && share.checkDetailState()){
+                val i = Intent(this,BottomNavigation::class.java)
+                startActivity(i)
+            }else if (share.checkLoginState() && !share.checkDetailState()){
                 val i = Intent(this,detailsPage::class.java)
                 startActivity(i)
-            } else{
+            }
+            else{
                 val i = Intent(this,LoginPage::class.java)
                 startActivity(i)
             }

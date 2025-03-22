@@ -14,11 +14,11 @@ class detail_11 : Fragment() {
 
     private lateinit var recyclerView : RecyclerView
 
+    private lateinit var viewModel: dataViewModel
+
     private val interest = listOf(
         "Agnostic","Atheist","Buddhist","Catholic","Christian","Hindu","Jain","Jewish","Mormon","Muslim","Zoroastrian","Sikh","Spritual"
     )
-
-    private lateinit var viewModel: dataViewModel
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -30,13 +30,12 @@ class detail_11 : Fragment() {
 
         recyclerView = view.findViewById(R.id.recyclerView)
 
-        viewModel = ViewModelProvider(this).get(dataViewModel::class.java)
-
+        viewModel = ViewModelProvider(this)[dataViewModel::class.java]
 
         recyclerView.layoutManager = GridLayoutManager(context,2)
 
 
-        val adapter = InterestsAdapter(interest,5,viewModel,requireActivity(),"Religion")
+        var adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"Religion")
         recyclerView.adapter=adapter
 
 

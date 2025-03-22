@@ -9,8 +9,8 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 
-class InterestsAdapter2(private val interests: List<String>,private val maxSelection : Int,private val viewModel: dataViewModel? = null,private val lifecycleOwner: LifecycleOwner? = null,private val name : String?=null) :
-    RecyclerView.Adapter<InterestsAdapter2.ViewHolder>() {
+class interesetAdapter2(private val interests: List<String>,private val maxSelection : Int,private val viewModel: dataModel2? = null,private val lifecycleOwner: LifecycleOwner? = null,private val name : String?=null) :
+    RecyclerView.Adapter<interesetAdapter2.ViewHolder>() {
 
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

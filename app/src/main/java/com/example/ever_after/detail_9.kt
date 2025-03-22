@@ -25,6 +25,8 @@ class detail_9 : Fragment() {
     )
 
     private lateinit var viewModel: dataViewModel
+    private lateinit var viewModel2: dataModel2
+
 
 
     @SuppressLint("MissingInflatedId")
@@ -35,18 +37,18 @@ class detail_9 : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_detail_9, container, false)
 
-        viewModel = ViewModelProvider(this).get(dataViewModel::class.java)
-
+        viewModel = ViewModelProvider(this)[dataViewModel::class.java]
+        viewModel2 = ViewModelProvider(this)[dataModel2::class.java]
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView2 = view.findViewById(R.id.recyclerView2)
 
         recyclerView.layoutManager = GridLayoutManager(context,1)
         recyclerView2.layoutManager = GridLayoutManager(context,1)
 
-        val adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"DrinkingStatus")
+        var adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"DrinkingStatus")
         recyclerView.adapter=adapter
 
-        val adapter2 = InterestsAdapter2(interest2,1,viewModel,requireActivity(),"SmokingStatus")
+       val  adapter2 = interesetAdapter2(interest2,1,viewModel2,requireActivity(),"SmokingStatus")
         recyclerView2.adapter = adapter2
 
 

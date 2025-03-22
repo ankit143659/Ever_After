@@ -26,6 +26,8 @@ class detailsPage : AppCompatActivity() {
     private lateinit var nextBtn: ImageButton
     private val totalPages = 13
     private lateinit var viewModel: dataViewModel
+    private lateinit var viewModel2: dataModel2
+    private lateinit var share : SharePrefrence
 
     private lateinit var loadingDialog : Dialog
 
@@ -38,6 +40,9 @@ class detailsPage : AppCompatActivity() {
         setContentView(R.layout.activity_details_page)
 
         viewModel = ViewModelProvider(this)[dataViewModel::class.java]
+        viewModel2 = ViewModelProvider(this)[dataModel2::class.java]
+
+        share = SharePrefrence(this)
 
         viewPager2 = findViewById(R.id.viewPager)
         progressBar = findViewById(R.id.progressBar)
@@ -65,82 +70,92 @@ class detailsPage : AppCompatActivity() {
             loadingDialog.show()
             Handler().postDelayed({
                 Log.d("CurrentPage", viewPager2.currentItem.toString())
-                val currentFragment = supportFragmentManager.findFragmentByTag("f" + viewPager2.currentItem)
-               /* if (currentFragment is detail_1) {
+                val currentFragment =
+                    supportFragmentManager.findFragmentByTag("f" + viewPager2.currentItem)
+                if (currentFragment is detail_1) {
                     if (!viewModel.isDataValid()) {
                         loadingDialog.dismiss()
-                        currentFragment.requireView().findViewById<TextView>(R.id.nameError).visibility = View.VISIBLE
-                        currentFragment.requireView().findViewById<TextView>(R.id.dateError).visibility = View.VISIBLE
+                        currentFragment.requireView()
+                            .findViewById<TextView>(R.id.nameError).visibility = View.VISIBLE
+                        currentFragment.requireView()
+                            .findViewById<TextView>(R.id.dateError).visibility = View.VISIBLE
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_2){
-                    if (!viewModel.gendervalueSelected()){
+                } else if (currentFragment is detail_2) {
+                    if (!viewModel.gendervalueSelected()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select gender",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select gender", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_3){
-                    if (!viewModel.purposeValue()){
+                } else if (currentFragment is detail_3) {
+                    if (!viewModel.purposeValue()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_4){
-                    if (!viewModel.genderMeetiing()){
+                } else if (currentFragment is detail_4) {
+                    if (!viewModel.genderMeetiing()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_5){
-                    viewModel.selectedOptions.observe(this){selectedList ->
-                        Log.d("List","$selectedList")
+                } else if (currentFragment is detail_5) {
+                    viewModel.selectedOptions.observe(this) { selectedList ->
+                        Log.d("List", "$selectedList")
                         database.child("Hope").setValue(selectedList)
                     }
-                }else if (currentFragment is detail_6){
-                    if (!viewModel.checkHeight()){
+                } else if (currentFragment is detail_6) {
+                    if (!viewModel.checkHeight()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please select your Height",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please select your Height", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_7) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_7) {
+                    if (!viewModel.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_8) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_8) {
+                    if (!viewModel.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_9) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_9) {
+                    if (!viewModel.checkInterest() && !viewModel2.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_10) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_10) {
+                    if (!viewModel.checkInterest() && !viewModel2.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_11) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_11) {
+                    if (!viewModel.checkInterest() && !viewModel2.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }else if (currentFragment is detail_12) {
-                    if (!viewModel.checkInterest()){
+                } else if (currentFragment is detail_12) {
+                    if (!viewModel.checkInterest() && !viewModel2.checkInterest()) {
                         loadingDialog.dismiss()
-                        Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
+                        return@postDelayed
+                    }
+                } else if (currentFragment is detail_12) {
+                    if (!viewModel.checkImage()) {
+                        loadingDialog.dismiss()
+                        Toast.makeText(this, "Please Select atleast one", Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
                 }
-*/
-                if (viewPager2.currentItem == 12) {
+
+                if (viewPager2.currentItem == 12 && viewModel.checkImage()) {
+                    share.DetailState(true)
                     loadingDialog.dismiss()
                     val intent = Intent(this, BottomNavigation::class.java)
                     startActivity(intent)
@@ -152,10 +167,14 @@ class detailsPage : AppCompatActivity() {
                         updateProgressBar(currentItem + 1)
                     }
                 }
+
+
+
                 loadingDialog.dismiss()
             },1500)
         }
-    }
+}
+
 
     private fun updateProgressBar(step: Int) {
         progressBar.progress = (step + 1) * (100 / totalPages)

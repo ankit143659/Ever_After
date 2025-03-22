@@ -12,12 +12,12 @@ import androidx.recyclerview.widget.RecyclerView
 
 
 class detail_12 : Fragment() {
-  private lateinit var recyclerView: RecyclerView
-  private val interest = listOf(
-      "Black lives matter","Feminism","Enviromentalism","Trans rights","Disability rights","Reproductive rights"
-  )
+    private lateinit var recyclerView: RecyclerView
     private lateinit var viewModel: dataViewModel
 
+    private val interest = listOf(
+        "Black lives matter","Feminism","Enviromentalism","Trans rights","Disability rights","Reproductive rights"
+    )
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,13 +26,12 @@ class detail_12 : Fragment() {
         // Inflate the layout for this fragment
         val view =inflater.inflate(R.layout.fragment_detail_12, container, false)
         recyclerView = view.findViewById(R.id.recyclerView)
+        viewModel = ViewModelProvider(this)[dataViewModel::class.java]
 
-        viewModel = ViewModelProvider(this).get(dataViewModel::class.java)
 
         recyclerView.layoutManager = GridLayoutManager(context,1)
 
-
-        val adapter = InterestsAdapter(interest,3,viewModel,requireActivity(),"Communities")
+        var adapter = InterestsAdapter(interest,3,viewModel,requireActivity(),"Communities")
         recyclerView.adapter=adapter
         return view
     }
