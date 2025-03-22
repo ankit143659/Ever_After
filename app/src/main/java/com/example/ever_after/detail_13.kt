@@ -29,43 +29,29 @@ class detail_13 : Fragment() {
     private val imageViews = mutableListOf<ImageView>()
     private val viewModel: dataViewModel by viewModels()
 
-    private lateinit var loadingDialog : Dialog
-
+    private lateinit var loadingDialog: Dialog
+    private var selectedImageIndex: Int = -1  // Track karega kaunsa ImageView update ho raha hai
 
     private val imagePickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                val selectedUris = mutableListOf<Uri>()
-                result.data?.clipData?.let { clipData ->
-                    for (i in 0 until clipData.itemCount) {
-                        val uri = clipData.getItemAt(i).uri
-                        persistUriPermission(uri)
-                        selectedUris.add(uri)
-                    }
-                } ?: result.data?.data?.let { uri ->
+                result.data?.data?.let { uri ->
                     persistUriPermission(uri)
-                    selectedUris.add(uri)
-                }
-
-                if (selectedUris.isNotEmpty()) {
                     loadingDialog.show()
-                    processImages(selectedUris)
-                } else {
-                    loadingDialog.dismiss() // Agar koi image select nahi hui to dismiss karna
-                }
+                    processSingleImage(uri, selectedImageIndex)
+                } ?: loadingDialog.dismiss()
             } else {
-                loadingDialog.dismiss() // User ne cancel kar diya
+                loadingDialog.dismiss()
             }
         }
-
-
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         val view = inflater.inflate(R.layout.fragment_blank, container, false)
         setupLoadingDialog()
+
+        // ImageView list initialize
         imageViews.addAll(
             listOf(
                 view.findViewById(R.id.img1),
@@ -77,8 +63,12 @@ class detail_13 : Fragment() {
             )
         )
 
-        view.findViewById<Button>(R.id.btnSelectImage).setOnClickListener {
-            openImagePicker()
+        // Har ImageView ke liye Click Listener set karna
+        imageViews.forEachIndexed { index, imageView ->
+            imageView.setOnClickListener {
+                selectedImageIndex = index
+                openImagePicker()
+            }
         }
 
         // Observe ViewModel changes
@@ -91,9 +81,8 @@ class detail_13 : Fragment() {
     }
 
     private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+        val intent = Intent(Intent.ACTION_PICK).apply {
             type = "image/*"
-            putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
         }
         imagePickerLauncher.launch(intent)
     }
@@ -106,44 +95,33 @@ class detail_13 : Fragment() {
         loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent) // Transparent BG
     }
 
-    private fun processImages(newUris: List<Uri>) {
+    private fun processSingleImage(uri: Uri, index: Int) {
         lifecycleScope.launch(Dispatchers.IO) {
-            val newBitmapStrings = newUris.mapNotNull { uri ->
-                getBitmapFromUri(uri)?.let { encodeToBase64(it) }
-            }
+            val bitmapString = getBitmapFromUri(uri)?.let { encodeToBase64(it) }
 
             withContext(Dispatchers.Main) {
-                val maxSize = 6  // **Max 6 images allowed**
-                var currentBitmaps = viewModel.imageBitmaps.value?.toMutableList() ?: mutableListOf()
+                bitmapString?.let {
+                    val currentBitmaps = viewModel.imageBitmaps.value?.toMutableList()
+                        ?: MutableList(6) { "" } // ✅ Ensure list has at least 6 elements
 
-                if (currentBitmaps.size < maxSize) {
-                    // **Step 1: Pehle slots sequentially fill honge**
-                    val spaceLeft = maxSize - currentBitmaps.size
-                    val imagesToAdd = newBitmapStrings.take(spaceLeft)
-                    currentBitmaps.addAll(imagesToAdd)
+                    if (index in currentBitmaps.indices) { // ✅ Prevent IndexOutOfBounds
+                        currentBitmaps[index] = it
+                        viewModel.updateImages(currentBitmaps)
+                    } else {
+                        Log.e("processSingleImage", "Invalid index: $index")
+                    }
                 }
-
-                if (newBitmapStrings.size > (maxSize - currentBitmaps.size)) {
-                    // **Step 2: Agar list full ho chuki, to oldest images replace karni shuru karo**
-                    val overflow = newBitmapStrings.size - (maxSize - currentBitmaps.size)
-                    currentBitmaps =
-                        (currentBitmaps.drop(overflow) + newBitmapStrings).takeLast(maxSize).toMutableList()
-                }
-
-                viewModel.updateImages(currentBitmaps)
+                loadingDialog.dismiss()
             }
         }
     }
 
 
-
-
-
     private fun updateImageViews(bitmaps: List<Bitmap>) {
-        for (i in imageViews.indices) {
-            if (i < bitmaps.size) {
-                imageViews[i].setImageBitmap(bitmaps[i])
-                imageViews[i].visibility = View.VISIBLE
+        imageViews.forEachIndexed { index, imageView ->
+            if (index < bitmaps.size && bitmaps[index] != null) {
+                imageView.setImageBitmap(bitmaps[index])
+                imageView.visibility = View.VISIBLE
             }
         }
         loadingDialog.dismiss()
@@ -172,7 +150,6 @@ class detail_13 : Fragment() {
         }
     }
 
-
     private fun decodeFromBase64(encodedString: String): Bitmap? {
         return try {
             val decodedBytes = Base64.decode(encodedString, Base64.DEFAULT)
@@ -192,3 +169,4 @@ class detail_13 : Fragment() {
         }
     }
 }
+
