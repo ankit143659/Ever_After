@@ -16,15 +16,13 @@ import com.google.firebase.database.FirebaseDatabase
 class detail_2 : Fragment() {
     private lateinit var radioWoman: RadioButton
     private lateinit var radioMan: RadioButton
-    private lateinit var radioOther: RadioButton
 
 
     private lateinit var optionWoman: LinearLayout
     private lateinit var optionMan: LinearLayout
-    private lateinit var optionOther: LinearLayout
+
 
     private lateinit var woman : TextView
-    private lateinit var other : TextView
     private lateinit var man : TextView
     private lateinit var headerText : TextView
 
@@ -69,23 +67,21 @@ class detail_2 : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         radioWoman = view.findViewById(R.id.radioWoman)
         radioMan = view.findViewById(R.id.radioMan)
-        radioOther = view.findViewById(R.id.radioother)
+
 
         woman = view.findViewById(R.id.tvWoman)
         man = view.findViewById(R.id.tvMan)
-        other = view.findViewById(R.id.tvother)
 
 
 
 
         optionWoman = view.findViewById(R.id.optionWoman)
         optionMan = view.findViewById(R.id.optionMan)
-        optionOther = view.findViewById(R.id.optionother)
 
 
-        val radioButtons = listOf(radioWoman, radioMan,radioOther)
-        val layouts = listOf(optionWoman, optionMan,optionOther)
-        val textViews = listOf(woman, man, other)
+        val radioButtons = listOf(radioWoman, radioMan)
+        val layouts = listOf(optionWoman, optionMan)
+        val textViews = listOf(woman, man)
 
         for (i in radioButtons.indices) {
             radioButtons[i].setOnClickListener {
