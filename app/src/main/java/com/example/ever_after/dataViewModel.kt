@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import kotlinx.coroutines.tasks.await
 import java.io.ByteArrayOutputStream
 
 class dataViewModel : ViewModel() {
@@ -34,32 +35,48 @@ class dataViewModel : ViewModel() {
     private val _imageBitmaps = MutableLiveData<List<String>>(emptyList())
     val imageBitmaps: LiveData<List<String>> get() = _imageBitmaps
 
-    fun updateImages(newImages: List<String>) {
+    suspend fun updateImage(newBitmap: Bitmap, position: Int): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val userId = currentUser?.uid ?: "Unknown"
-        val databaseRef = FirebaseDatabase.getInstance().getReference("Users").child(userId).child("Images")
+        val userId = currentUser?.uid ?: return false
 
-        // Get existing images or create an empty list
-        val currentList = _imageBitmaps.value?.toMutableList() ?: mutableListOf()
+        val databaseRef = FirebaseDatabase.getInstance().getReference("Users")
+            .child(userId)
+            .child("Images")
+            .child("Image${position + 1}")
 
-        // Ensure max 6 images - remove oldest if needed
-        val totalImages = (currentList + newImages).takeLast(6)
+        val compressedBase64 = bitmapToBase64(newBitmap, 40)
 
-        _imageBitmaps.value = totalImages
-
-        // Optimize Firebase update - Only update changed images
-        val imageMap = totalImages.mapIndexed { index, img -> "Image${index + 1}" to img }.toMap()
-        databaseRef.updateChildren(imageMap) // 🔥 Faster than `setValue()`
+        return try {
+            databaseRef.setValue(compressedBase64).await()  // 🔹 Coroutine suspend karega
+            Log.d("FirebaseSuccess", "Image updated successfully")
+            true
+        } catch (e: Exception) {
+            Log.e("FirebaseError", "Failed to update image: ${e.message}")
+            false
+        }
     }
 
-/*
-    // Function to convert Bitmap to Base64 String
-    private fun bitmapToBase64(bitmap: Bitmap): String {
+
+    // 🔥 **Bitmap ko Base64 me convert karne ka helper function**
+    fun bitmapToBase64(bitmap: Bitmap, quality: Int): String {
         val byteArrayOutputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, byteArrayOutputStream)  // 🔹 Compress karega
         val byteArray = byteArrayOutputStream.toByteArray()
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
-    }*/
+        return Base64.encodeToString(byteArray, Base64.NO_WRAP)  // 🔹 NO_WRAP = Extra new lines nahi ayengi, size aur kam hoga
+    }
+
+
+
+
+
+    /*
+        // Function to convert Bitmap to Base64 String
+        private fun bitmapToBase64(bitmap: Bitmap): String {
+            val byteArrayOutputStream = ByteArrayOutputStream()
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream)
+            val byteArray = byteArrayOutputStream.toByteArray()
+            return Base64.encodeToString(byteArray, Base64.DEFAULT)
+        }*/
 
 
     fun toggleInterest(item: String, maxSelection: Int,name : String) {

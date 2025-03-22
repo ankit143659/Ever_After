@@ -43,11 +43,11 @@ class detail_9 : Fragment() {
         recyclerView.layoutManager = GridLayoutManager(context,1)
         recyclerView2.layoutManager = GridLayoutManager(context,1)
 
-        var adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"DrinkingStatus")
+        val adapter = InterestsAdapter(interest,1,viewModel,requireActivity(),"DrinkingStatus")
         recyclerView.adapter=adapter
 
-        adapter = InterestsAdapter(interest2,1,viewModel,requireActivity(),"SmokingStatus")
-        recyclerView2.adapter = adapter
+        val adapter2 = InterestsAdapter2(interest2,1,viewModel,requireActivity(),"SmokingStatus")
+        recyclerView2.adapter = adapter2
 
 
 

@@ -138,8 +138,8 @@ class detailsPage : AppCompatActivity() {
                         Toast.makeText(this,"Please Select atleast one",Toast.LENGTH_SHORT).show()
                         return@postDelayed
                     }
-                }*/
-
+                }
+*/
                 if (viewPager2.currentItem == 12) {
                     loadingDialog.dismiss()
                     val intent = Intent(this, BottomNavigation::class.java)

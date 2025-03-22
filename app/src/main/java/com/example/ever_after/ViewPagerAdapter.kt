@@ -10,7 +10,7 @@ class ViewPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activ
 
     override fun createFragment(position: Int): Fragment {
         return when (position) {
-            0 -> detail_13()
+            0 -> detail_1()
             1 -> detail_2()
             2 -> detail_3()
             3-> detail_4()
