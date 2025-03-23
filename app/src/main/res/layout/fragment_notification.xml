@@ -1,14 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
     tools:context=".Notification">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:radius="12dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:backgroundTint="@color/white"
+        android:padding="10dp"
+        android:layout_margin="8dp">
 
-</FrameLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/profile_image"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/logo"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:background="@drawable/circle_bg" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingStart="10dp">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:fontFamily="@font/font1"
+                    android:text="Rohit Sharma"
+                    android:textStyle="bold"
+                    android:textSize="14sp"
+                    android:textColor="@color/black"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/notification_text"
+                    android:fontFamily="@font/font1"
+                    android:text="sent you a connection request"
+                    android:layout_height="wrap_content" android:layout_width="wrap_content"
+                    android:textSize="14sp"
+                    android:textColor="@color/black" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="35dp"
+                android:gravity="end"
+                android:layout_marginTop="5dp">
+
+                <!-- Accept Button (Green with Tick Icon) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_accept"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="5dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/chip_selected"
+                    android:backgroundTint="@color/white"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_check"
+                        app:tint="@color/chip_selected" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Spacing Between Buttons -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="2dp"/>
+
+                <!-- Reject Button (Red with Cross Icon) -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/btn_reject"
+                    android:layout_width="35dp"
+                    android:layout_height="35dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="5dp"
+                    app:strokeWidth="2dp"
+                    app:strokeColor="@color/black"
+                    android:backgroundTint="@color/white"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="12dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_wrong"
+                        app:tint="@color/black" />
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:radius="12dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:padding="10dp"
+        android:layout_margin="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/profile_image2"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:src="@drawable/logo"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:background="@drawable/circle_bg" />
+
+
+
+            <TextView
+                android:id="@+id/likeProfile"
+                android:fontFamily="@font/font1"
+                android:text="You have new message from Rohit Sharma"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="9dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnView"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="5dp"
+                android:layout_marginLeft="7dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/black"
+                android:backgroundTint="@color/white"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="12dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/baseline_remove_red_eye_24"
+                    app:tint="@color/black" />
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:radius="12dp"
+        android:elevation="4dp"
+        app:cardCornerRadius="10dp"
+        android:padding="10dp"
+        android:layout_margin="8dp"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/profile_image3"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:src="@drawable/logo"
+                android:scaleType="centerCrop"
+                android:clipToOutline="true"
+                android:background="@drawable/circle_bg" />
+
+
+
+            <TextView
+                android:id="@+id/likeProfile2"
+                android:fontFamily="@font/font1"
+                android:text="Rohit Sharma liked your profile"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="10dp"
+                android:textSize="14sp"
+                android:textColor="@color/black"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+
+
+            <TextView
+                android:id="@+id/likeProfile3"
+                android:fontFamily="@font/font1"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="20dp"
+                android:textStyle="bold"
+                android:drawableLeft="@drawable/baseline_favorite_24"
+                android:textSize="16sp"
+                android:textColor="@color/black"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+
+        </LinearLayout>
+
+
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

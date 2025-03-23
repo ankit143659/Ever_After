@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/bottom_navigation"
-        android:titleTextColor="@color/black"
+        app:titleTextColor="@color/black"
         app:layout_constraintTop_toTopOf="parent"/>
 
     <!-- Fragment Container for Navigation -->

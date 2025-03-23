@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:background="#5F0D1555"
         android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/profile_image"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:src="@drawable/baseline_perm_identity_24"
+            android:src="@drawable/logo"
             android:scaleType="centerCrop"
+            android:clipToOutline="true"
             android:background="@drawable/circle_bg" />
 
         <LinearLayout
@@ -30,6 +32,7 @@
 
             <TextView
                 android:id="@+id/username"
+                android:fontFamily="@font/font1"
                 android:text="Rohit Sharma"
                 android:textStyle="bold"
                 android:textSize="16sp"
@@ -37,9 +40,10 @@
 
             <TextView
                 android:id="@+id/notification_text"
+                android:fontFamily="@font/font1"
                 android:text="sent you a connection request"
                 android:layout_height="wrap_content" android:layout_width="wrap_content"
-                android:textSize="14sp"
+                android:textSize="15sp"
                 android:textColor="@color/black" />
 
         </LinearLayout>
@@ -48,15 +52,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             android:gravity="end"
             android:layout_marginTop="5dp">
 
             <!-- Accept Button (Green with Tick Icon) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_accept"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="5dp"
                 app:strokeWidth="2dp"
@@ -78,13 +82,13 @@
             <!-- Spacing Between Buttons -->
             <View
                 android:layout_width="10dp"
-                android:layout_height=""/>
+                android:layout_height="2dp"/>
 
             <!-- Reject Button (Red with Cross Icon) -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/btn_reject"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 app:cardCornerRadius="25dp"
                 app:cardElevation="5dp"
                 app:strokeWidth="2dp"
