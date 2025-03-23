@@ -30,7 +30,7 @@ class detail_10 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_detail_9, container, false)
+        val view = inflater.inflate(R.layout.fragment_detail_10, container, false)
 
         recyclerView = view.findViewById(R.id.recyclerView)
         recyclerView2 = view.findViewById(R.id.recyclerView2)
