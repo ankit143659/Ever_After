@@ -206,8 +206,8 @@
 
             <ImageView
                 android:id="@+id/profile_image3"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
                 android:src="@drawable/logo"
                 android:scaleType="centerCrop"
                 android:clipToOutline="true"
