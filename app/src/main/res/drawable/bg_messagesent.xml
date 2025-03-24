@@ -10,10 +10,10 @@
         android:bottomLeftRadius="10dp"/>
 
     <!-- Background color -->
-    <solid android:color="@color/blue" />
+    <solid android:color="@color/red" />
 
     <!-- Border stroke -->
     <stroke
         android:width="2dp"
-        android:color="@color/white" /> <!-- Change to any border color -->
+        android:color="@color/red" /> <!-- Change to any border color -->
 </shape>
