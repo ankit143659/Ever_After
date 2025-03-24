@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
@@ -18,7 +17,7 @@ import com.google.firebase.database.ValueEventListener
 
 class Home : Fragment() {
     private lateinit var recyclerView: RecyclerView
-    private lateinit var adapter: UserAdapter
+    private lateinit var adapter: UserHomeAdapter
     private lateinit var userModelList: MutableList<UserModel>
     private lateinit var database: DatabaseReference
     private lateinit var currentUserInterests: String // Interest field as String
@@ -37,7 +36,7 @@ class Home : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         userModelList = mutableListOf()
-        adapter = UserAdapter(userModelList)
+        adapter = UserHomeAdapter(userModelList)
         recyclerView.adapter = adapter
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid

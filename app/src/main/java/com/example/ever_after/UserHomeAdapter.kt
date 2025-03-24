@@ -13,8 +13,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class UserAdapter(private val userList: List<UserModel>) :
-    RecyclerView.Adapter<UserAdapter.ViewHolder>() {
+class UserHomeAdapter(private val userList: List<UserModel>) :
+    RecyclerView.Adapter<UserHomeAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val profileImage: ImageView = view.findViewById(R.id.profile_image)
