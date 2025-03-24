@@ -176,6 +176,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp"
+                    android:id="@+id/chateye"
                     android:scaleType="centerInside"
                     android:src="@drawable/baseline_remove_red_eye_24"
                     app:tint="@color/black" />
