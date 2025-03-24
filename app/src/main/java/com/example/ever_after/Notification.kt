@@ -1,10 +1,12 @@
 package com.example.ever_after
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +35,18 @@ class Notification : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notification, container, false)
+        val view = inflater.inflate(R.layout.fragment_notification, container, false)
+
+        // Find ImageView by ID
+        val chatEye: ImageView = view.findViewById(R.id.chateye)
+
+        // Set click listener to navigate to the target activity
+        chatEye.setOnClickListener {
+            val intent = Intent(requireContext(), UserListActivity::class.java)
+            startActivity(intent)
+        }
+
+        return view
     }
 
     companion object {
