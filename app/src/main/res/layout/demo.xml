@@ -113,9 +113,10 @@
 
         <!-- Like Button -->
         <ImageButton
-            android:id="@+id/like_button"
+            android:id="@+id/chat_button"
             android:layout_width="60dp"
             android:layout_height="60dp"
+            android:visibility="gone"
             android:src="@drawable/h"
             android:background="@android:color/transparent"
             android:layout_alignParentEnd="true"/>

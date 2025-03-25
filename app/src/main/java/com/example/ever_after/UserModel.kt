@@ -1,7 +1,7 @@
 package com.example.ever_after
 
 data class UserModel(
-    val userId: String = "",
+    var userId: String = "",
     val name: String = "",
     val DOB: String = "",
     val Communities: String = "",

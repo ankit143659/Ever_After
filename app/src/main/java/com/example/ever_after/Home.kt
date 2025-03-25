@@ -21,6 +21,7 @@ class Home : Fragment() {
     private lateinit var userModelList: MutableList<UserModel>
     private lateinit var database: DatabaseReference
     private lateinit var currentUserInterests: String // Interest field as String
+    private lateinit var currentUserGender: String // Interest field as String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,42 +44,54 @@ class Home : Fragment() {
         database = FirebaseDatabase.getInstance().reference.child("Users")
 
         if (userId != null) {
-            // **Fetch Current User's Interests**
-            database.child(userId).child("Details").child("Interest").get()
+            // **Fetch Current User's Interests & Gender**
+            database.child(userId).child("Details").get()
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
-                        currentUserInterests = snapshot.value.toString()
-                        Log.d("FirebaseUser", "Fetched Current User Interests: $currentUserInterests") // ✅ Debugging
-                        fetchMatchingProfiles(userId)
+                        currentUserInterests = snapshot.child("Hope").child("Interest").value.toString().trim()
+                        currentUserGender = snapshot.child("Gender").value.toString().trim()
+
+                        if (currentUserInterests.isNotEmpty() && currentUserGender.isNotEmpty()) {
+                            Log.d("FirebaseUser", "Fetched Interests: $currentUserInterests, Gender: $currentUserGender")
+                            fetchMatchingProfiles(userId)
+                        } else {
+                            Log.e("FirebaseUser", "Interest or Gender is missing for user: $userId")
+                        }
                     } else {
-                        Log.e("FirebaseUser", "Interest field not found for user: $userId")
+                        Log.e("FirebaseUser", "Details not found for user: $userId")
                     }
                 }.addOnFailureListener {
-                    Log.e("FirebaseUser", "Error fetching Interest: ${it.message}")
+                    Log.e("FirebaseUser", "Error fetching data: ${it.message}")
                 }
-
         }
-    }
 
+
+    }
     private fun fetchMatchingProfiles(currentUserId: String) {
-        database.addListenerForSingleValueEvent(object : ValueEventListener {
+        database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userModelList.clear()
                 for (userSnapshot in snapshot.children) {
+                    val userId = userSnapshot.child("userId").value?.toString() ?: ""
                     val userDetails = userSnapshot.child("Details")
-                    val userImages = userSnapshot.child("Images") // ✅ Images node fetch karo
+                    val userImages = userSnapshot.child("Images")
                     val user = userDetails.getValue(UserModel::class.java)
 
                     if (user != null && user.userId != currentUserId) {
-                        // ✅ Base64 Image Fetch Karna
+                        user.userId=userId
+                        // ✅ Fetch User's Image
                         val imageBase64 = userImages.child("Image1").value?.toString()
-                        user.Image1 = imageBase64.toString() // UserModel me assign karna
-                        Log.d("image", "Aryan $imageBase64")
+                        user.Image1 = imageBase64.toString()
 
-                        val userInterests = userDetails.child("Interest").value.toString()
-                        val commonInterests = userInterests.split(" ").intersect(currentUserInterests.split(" "))
+                        // ✅ Fetch User's Gender
+                        val userGender = userDetails.child("Gender").value.toString().trim()
 
-                        if (commonInterests.size >= 3) {
+                        // ✅ Fetch User's Interests
+                        val userInterests = userDetails.child("Hope").child("Interest").value.toString()
+                        val commonInterests = userInterests.split(", ").intersect(currentUserInterests.split(", "))
+
+                        // ✅ Gender Match + Minimum 3 Common Interests
+                        if (userGender == currentUserGender && commonInterests.size >= 1) {
                             userModelList.add(user)
                         }
                     }
@@ -91,4 +104,5 @@ class Home : Fragment() {
             }
         })
     }
+
 }
