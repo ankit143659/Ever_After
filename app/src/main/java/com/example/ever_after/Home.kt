@@ -1,5 +1,6 @@
 package com.example.ever_after
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -8,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -21,7 +23,7 @@ class Home : Fragment() {
     private lateinit var userModelList: MutableList<UserModel>
     private lateinit var database: DatabaseReference
     private lateinit var currentUserInterests: String // Interest field as String
-    private lateinit var currentUserGender: String // Interest field as String
+    private lateinit var currentUserGender: String // currentUserGender field as String
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,8 +34,13 @@ class Home : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val ChatButton:FloatingActionButton=view.findViewById(R.id.fab_chat)
 
         recyclerView = view.findViewById(R.id.recycler_view)
+        ChatButton.setOnClickListener {
+            val intent = Intent(requireContext(), UserListActivity::class.java)
+            startActivity(intent)
+        }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         userModelList = mutableListOf()
@@ -71,6 +78,18 @@ class Home : Fragment() {
         database.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userModelList.clear()
+
+                // ✅ Current User Data Fetch
+                val currentUserDetails = snapshot.child(currentUserId).child("Details")
+                val currentMeetingPerson = currentUserDetails.child("MeetingPerson").value.toString().trim()
+                val currentUserInterests = currentUserDetails.child("Hope").child("Interest").value.toString()
+                val currentUserDrinking = currentUserDetails.child("DrinkingStatus").value.toString()
+                val currentUserSmoking = currentUserDetails.child("SmokingStatus").value.toString()
+                val currentUserReligion = currentUserDetails.child("Religion").value.toString()
+                val currentUserHaveKids = currentUserDetails.child("haveKids").value.toString()
+                val currentUserInterestForKids = currentUserDetails.child("interestForKids").value.toString()
+                val currentUserValues = currentUserDetails.child("Value").value.toString()
+
                 for (userSnapshot in snapshot.children) {
                     val userId = userSnapshot.child("userId").value?.toString() ?: ""
                     val userDetails = userSnapshot.child("Details")
@@ -78,7 +97,8 @@ class Home : Fragment() {
                     val user = userDetails.getValue(UserModel::class.java)
 
                     if (user != null && user.userId != currentUserId) {
-                        user.userId=userId
+                        user.userId = userId
+
                         // ✅ Fetch User's Image
                         val imageBase64 = userImages.child("Image1").value?.toString()
                         user.Image1 = imageBase64.toString()
@@ -86,21 +106,50 @@ class Home : Fragment() {
                         // ✅ Fetch User's Gender
                         val userGender = userDetails.child("Gender").value.toString().trim()
 
-                        // ✅ Fetch User's Interests
+                        // ✅ Fetch Other User's Data
                         val userInterests = userDetails.child("Hope").child("Interest").value.toString()
-                        val commonInterests = userInterests.split(", ").intersect(currentUserInterests.split(", "))
+                        val userDrinking = userDetails.child("DrinkingStatus").value.toString()
+                        val userSmoking = userDetails.child("SmokingStatus").value.toString()
+                        val userReligion = userDetails.child("Religion").value.toString()
+                        val userHaveKids = userDetails.child("haveKids").value.toString()
+                        val userInterestForKids = userDetails.child("interestForKids").value.toString()
+                        val userValues = userDetails.child("Value").value.toString()
 
-                        // ✅ Gender Match + Minimum 3 Common Interests
-                        if (userGender == currentUserGender && commonInterests.size >= 1) {
+                        // ✅ Check Matching Criteria
+                        var matchCount = 0
+                        val totalCriteria = 8 // Total Matching Factors
+
+                        if (userGender == currentMeetingPerson) matchCount++
+                        if (userDrinking == currentUserDrinking) matchCount++
+                        if (userSmoking == currentUserSmoking) matchCount++
+                        if (userReligion == currentUserReligion) matchCount++
+                        if (userHaveKids == currentUserHaveKids) matchCount++
+                        if (userInterestForKids == currentUserInterestForKids) matchCount++
+                        if (userValues == currentUserValues) matchCount++
+
+                        // ✅ Interest Matching
+                        val commonInterests = userInterests.split(", ").intersect(currentUserInterests.split(", "))
+                        if (commonInterests.size >= 1) matchCount++
+
+                        // ✅ Calculate Percentage
+                        val matchPercentage: Int = ((matchCount.toDouble() / totalCriteria) * 100).toInt()
+
+                        // ✅ Final Condition: At least 3 Matches & 50% Match Percentage
+                        if (matchCount >= 3 && matchPercentage >= 20) {
+                            user.matchPercentage = matchPercentage.toString() // Save Match Percentage in Model
                             userModelList.add(user)
                         }
                     }
                 }
+
+                // ✅ Sort by Highest Match Percentage
+                userModelList.sortByDescending { it.matchPercentage }
+
                 adapter.notifyDataSetChanged()
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("FirebaseError", "Error: ${error.message}")
+                Log.e("FetchProfiles", "Error: ${error.message}")
             }
         })
     }

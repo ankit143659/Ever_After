@@ -4,17 +4,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
-    android:background="#858080">
+    android:padding="16dp"
+    android:background="#F5F5F5">
 
     <!-- Profile Card -->
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="550dp"
+        android:layout_height="700dp"
         android:layout_margin="20dp"
-        android:radius="20dp"
-        app:cardElevation="8dp"
         app:cardCornerRadius="25dp"
+        app:cardElevation="10dp"
         app:cardBackgroundColor="@android:color/white">
 
         <RelativeLayout
@@ -29,11 +28,12 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/tony" />
 
-            <!-- Gradient Overlay for Better Visibility -->
+            <!-- Gradient Overlay -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="120dp"
-                android:layout_alignBottom="@+id/profile_image" />
+                android:layout_height="150dp"
+                android:layout_alignBottom="@id/profile_image"
+                android:background="@drawable/gradient_overlay" />
 
             <!-- Name and Age -->
             <TextView
@@ -42,84 +42,91 @@
                 android:layout_height="wrap_content"
                 android:text="Tony Stark, 27"
                 android:textSize="22sp"
-                android:textColor="@color/black"
+                android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:layout_marginBottom="20dp"
-                android:layout_alignBottom="@+id/profile_image"
-                android:layout_marginStart="20dp"/>
+                android:layout_marginBottom="10dp"
+                android:layout_alignBottom="@id/profile_image"
+                android:layout_marginStart="20dp" />
 
-            <!-- Location -->
+
+            <!-- Match Percentage -->
             <TextView
-                android:id="@+id/profile_location"
+                android:id="@+id/Communitity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Surat, Katargam"
-                android:textColor="@color/black"
-                android:textSize="16sp"
                 android:layout_below="@id/profile_name"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="4dp" />
+                android:layout_margin="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="207dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/match_bg"
+                android:padding="8dp"
+                android:text="87% Match"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <!-- Interests Section -->
-            <LinearLayout
-                android:id="@+id/interests_layout"
+            <TextView
+                android:id="@+id/match_percentage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="87% Match"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:background="@drawable/match_bg"
+                android:padding="8dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="15dp"/>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never"
+                android:layout_below="@id/Communitity"
+                android:id="@+id/in"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/interestsLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+            </HorizontalScrollView>
+
+            <!-- Bottom Button Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/in"
+                android:layout_marginTop="0dp"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:layout_below="@id/profile_location"
-                android:layout_marginStart="17dp"
-                android:layout_marginTop="10dp">
+                android:padding="10dp">
 
-                <TextView
+                <!-- Send Request Button -->
+                <Button
+                    android:id="@+id/send_request_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:background="@drawable/tag_bg"
-                    android:padding="8dp"
-                    android:text="Photography"
-                    android:textColor="@android:color/white"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Travel"
+                    android:backgroundTint="@color/red"
+                    android:paddingHorizontal="25dp"
+                    android:paddingVertical="10dp"
+                    android:text="Send Request"
                     android:textColor="@android:color/white"
-                    android:background="@drawable/tag_bg"
-                    android:padding="8dp"
-                    android:layout_marginEnd="8dp"/>
-            </LinearLayout>
+                    android:textSize="16sp" />
 
+                <!-- Chat Button -->
+                <ImageButton
+                    android:id="@+id/chat_button"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="20dp"
+                    android:backgroundTint="@color/red"
+                    android:src="@android:drawable/ic_dialog_email"
+                    android:visibility="gone" />
+            </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-    <!-- Bottom Button Section -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:padding="20dp">
-
-        <!-- Send Request Button -->
-        <Button
-            android:id="@+id/send_request_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Send Request"
-            android:textSize="16sp"
-            android:backgroundTint="@color/red"
-            android:textColor="@android:color/white"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="10dp"/>
-
-        <!-- Like Button -->
-        <ImageButton
-            android:id="@+id/chat_button"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:visibility="gone"
-            android:src="@drawable/h"
-            android:background="@android:color/transparent"
-            android:layout_alignParentEnd="true"/>
-    </RelativeLayout>
-
 </RelativeLayout>

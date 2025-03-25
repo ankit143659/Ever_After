@@ -2,6 +2,7 @@ package com.example.ever_after
 
 data class UserModel(
     var userId: String = "",
+    var matchPercentage: String = "",
     val name: String = "",
     val DOB: String = "",
     val Communities: String = "",
