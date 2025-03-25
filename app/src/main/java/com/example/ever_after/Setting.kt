@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.google.android.gms.location.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -28,6 +29,8 @@ import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsStatusCodes
 import com.google.android.gms.location.SettingsClient
+import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase
+import org.osmdroid.util.MapTileIndex
 
 class Setting : Fragment() {
 
@@ -36,6 +39,8 @@ class Setting : Fragment() {
     private val database = FirebaseDatabase.getInstance().getReference("Users")
     private val userLocations = mutableListOf<Pair<String, GeoPoint>>()
     private var currentUserLocation: GeoPoint? = null
+    private lateinit var btnToggleMapView: ImageView
+    private var isSatelliteView = false
 
     private val LOCATION_PERMISSION_REQUEST_CODE = 1001
     private val GPS_ENABLE_REQUEST_CODE = 1002
@@ -46,6 +51,7 @@ class Setting : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
+
     ): View {
         val view = inflater.inflate(R.layout.fragment_setting, container, false)
 
@@ -54,12 +60,62 @@ class Setting : Fragment() {
         mapView = view.findViewById(R.id.mapView)
         mapView.setMultiTouchControls(true)
 
+        val btnToggleMapView = view.findViewById<ImageView>(R.id.btnToggleMapView)
+
+        setNormalMapView()
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         setupLocationRequest()
         requestLocationPermission()
 
+        btnToggleMapView.setOnClickListener {
+            if (isSatelliteView) {
+                setNormalMapView()
+            } else {
+                setSatelliteMapView()
+            }
+            isSatelliteView = !isSatelliteView
+        }
         return view
+    }
+
+    private fun setNormalMapView() {
+        val normalTileSource = object : OnlineTileSourceBase(
+            "OpenStreetMap",
+            0, 18, 256, "",
+            arrayOf("https://tile.openstreetmap.org/")
+        ) {
+            override fun getTileURLString(pMapTileIndex: Long): String {
+                val zoom = MapTileIndex.getZoom(pMapTileIndex)
+                val x = MapTileIndex.getX(pMapTileIndex)
+                val y = MapTileIndex.getY(pMapTileIndex)
+                return "$baseUrl$zoom/$x/$y.png"
+            }
+        }
+        mapView.setTileSource(normalTileSource)
+    }
+
+    private fun setSatelliteMapView() {
+        val appPackageName = requireContext().packageName
+        Configuration.getInstance().userAgentValue = appPackageName
+
+        // Define the custom Esri tile source
+        val esriTileSource = object : OnlineTileSourceBase(
+            "Esri World Imagery",
+            0, 18, 256, "",
+            arrayOf("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/")
+        ) {
+            override fun getTileURLString(pMapTileIndex: Long): String {
+                val zoom = MapTileIndex.getZoom(pMapTileIndex)
+                val x = MapTileIndex.getX(pMapTileIndex)
+                val y = MapTileIndex.getY(pMapTileIndex)
+                return "$baseUrl$zoom/$y/$x"
+            }
+        }
+
+        // Apply the custom tile source to the MapView
+        mapView.setTileSource(esriTileSource)
     }
 
     private fun setupLocationRequest() {
@@ -292,7 +348,7 @@ class Setting : Fragment() {
                 override fun draw(c: Canvas, osmv: MapView, shadow: Boolean) {
                     val projection = osmv.projection.toPixels(location, null)
                     val paint = Paint().apply {
-                        color = Color.BLACK
+                        color = Color.RED
                         textSize = 40f
                         isAntiAlias = true
                         textAlign = Paint.Align.CENTER
