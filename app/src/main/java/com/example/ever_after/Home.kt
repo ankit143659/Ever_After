@@ -90,13 +90,22 @@ class Home : Fragment() {
                 val currentUserInterestForKids = currentUserDetails.child("interestForKids").value.toString()
                 val currentUserValues = currentUserDetails.child("Value").value.toString()
 
+                // ✅ Fetch Disliked Users Directly
+                val dislikedUsers = mutableSetOf<String>()
+                for (dislikedUserSnapshot in snapshot.child(currentUserId).child("DislikedUsers").children) {
+                    dislikedUsers.add(dislikedUserSnapshot.key.toString())
+                }
                 for (userSnapshot in snapshot.children) {
-                    val userId = userSnapshot.child("userId").value?.toString() ?: ""
+                    val userId = userSnapshot.key.toString()
+
+                    // ✅ Ignore Current User & Disliked Users
+                    if (userId == currentUserId || dislikedUsers.contains(userId)) continue
+
                     val userDetails = userSnapshot.child("Details")
                     val userImages = userSnapshot.child("Images")
                     val user = userDetails.getValue(UserModel::class.java)
 
-                    if (user != null && user.userId != currentUserId) {
+                    if (user != null ) {
                         user.userId = userId
 
                         // ✅ Fetch User's Image

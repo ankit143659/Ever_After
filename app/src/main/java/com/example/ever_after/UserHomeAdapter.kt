@@ -27,7 +27,7 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class UserHomeAdapter(private val userList: List<UserModel>) :
+class UserHomeAdapter(private val userList: MutableList<UserModel>) :
     RecyclerView.Adapter<UserHomeAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -38,6 +38,7 @@ class UserHomeAdapter(private val userList: List<UserModel>) :
         val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
         val sendRequestButton: Button = view.findViewById(R.id.send_request_button)
         val Chat_Button: ImageButton = view.findViewById(R.id.chat_button)
+        val Dis_like: ImageButton = view.findViewById(R.id.Dis_like)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -62,13 +63,14 @@ class UserHomeAdapter(private val userList: List<UserModel>) :
             holder.profileImage.setImageResource(R.drawable.tony)
         }
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+        val databaseRef =
+            currentUserId?.let {
+                FirebaseDatabase.getInstance().getReference("Users").child(it).child("DislikedUsers")
+            }
+
 
         // **Dynamically Add Interests**
         holder.interestsLayout.removeAllViews()
-        holder.interestsLayout.removeAllViews() // Clear previous views to prevent duplication
-
-        holder.interestsLayout.removeAllViews()
-
         user.Interest.split(",").map { it.trim() }.forEach { interest ->
             val textView = TextView(holder.itemView.context).apply {
                 text = interest
@@ -106,6 +108,23 @@ class UserHomeAdapter(private val userList: List<UserModel>) :
                 Log.e("Adapter", "Receiver ID is empty!")
             }
         }
+        holder.Dis_like.setOnClickListener {
+            if (databaseRef != null) {
+                Log.d("DislikeUser", "Disliking User ID: ${user.userId}")  // Debugging ke liye
+
+                databaseRef.child(user.userId).setValue(true)
+                    .addOnSuccessListener {
+                        userList.removeAt(position)
+                        notifyItemRemoved(position)
+                        notifyItemRangeChanged(position, userList.size)
+                        Log.d("DislikeUser", "User ${user.userId} disliked successfully")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("DislikeUser", "Error disliking user: ${e.message}")
+                    }
+            }
+        }
+
     }
 
     override fun getItemCount() = userList.size
@@ -131,7 +150,7 @@ class UserHomeAdapter(private val userList: List<UserModel>) :
             val requestData = mapOf(
                 "senderId" to senderId,
                 "receiverId" to receiverId,
-                "status" to "Pending"
+                "status" to "pending"
             )
 
             // Correct path for Firebase update
