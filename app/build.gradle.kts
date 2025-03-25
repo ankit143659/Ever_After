@@ -41,6 +41,9 @@ android {
 
 dependencies {
 
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation ("com.android.volley:volley:1.2.1")
     implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation(libs.androidx.core.ktx)
