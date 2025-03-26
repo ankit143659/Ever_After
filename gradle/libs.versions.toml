@@ -1,7 +1,11 @@
 [versions]
 agp = "8.6.0"
+circleimageview = "3.1.0"
 compiler = "4.15.1"
+firebaseAuthVersion = "22.2.0"
+firebaseMessaging = "24.1.1"
 glide = "4.16.0"
+googleAuthLibraryOauth2Http = "1.14.0"
 googleMaterial = "1.3.0-alpha03"
 googleMaterialVersion = "1.8.0"
 kotlin = "1.9.0"
@@ -17,8 +21,12 @@ material = "1.12.0"
 activity = "1.10.1"
 constraintlayout = "2.2.1"
 materialVersion = "1.11.0"
+okhttp = "4.10.0"
+osmdroidAndroid = "6.1.16"
 playServicesAuth = "21.3.0"
+playServicesMaps = "19.1.0"
 viewpager2 = "1.1.0"
+volley = "1.2.1"
 wheelpicker = "1.1.3"
 googleGmsGoogleServices = "4.4.2"
 firebaseAuth = "23.2.0"
@@ -36,8 +44,12 @@ cardview = "1.0.0"
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
+circleimageview = { module = "de.hdodenhof:circleimageview", version.ref = "circleimageview" }
 compiler = { module = "com.github.bumptech.glide:compiler", version.ref = "compiler" }
+firebase-auth-v2220 = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuthVersion" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessaging" }
 glide = { module = "com.github.bumptech.glide:glide", version.ref = "glide" }
+google-auth-library-oauth2-http = { module = "com.google.auth:google-auth-library-oauth2-http", version.ref = "googleAuthLibraryOauth2Http" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -51,7 +63,12 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 material-v1110 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
 material-v130alpha03 = { module = "com.google.android.material:material", version.ref = "googleMaterial" }
 material-v180 = { module = "com.google.android.material:material", version.ref = "googleMaterialVersion" }
+okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
+osmdroid-android = { module = "org.osmdroid:osmdroid-android", version.ref = "osmdroidAndroid" }
 play-services-auth = { module = "com.google.android.gms:play-services-auth", version.ref = "playServicesAuth" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesAuth" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+volley = { module = "com.android.volley:volley", version.ref = "volley" }
 wheelpicker = { module = "com.github.AigeStudio:WheelPicker", version.ref = "wheelpicker" }
 firebase-auth = { group = "com.google.firebase", name = "firebase-auth", version.ref = "firebaseAuth" }
 androidx-credentials = { group = "androidx.credentials", name = "credentials", version.ref = "credentials" }

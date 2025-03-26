@@ -1,5 +1,7 @@
 package com.example.ever_after
 
+import android.content.ContentValues.TAG
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -17,17 +19,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import org.json.JSONObject
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class UserHomeAdapter(private val userList: MutableList<UserModel>) :
+class UserHomeAdapter(private val userList: MutableList<UserModel>,private val context: Context) :
     RecyclerView.Adapter<UserHomeAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -192,6 +199,11 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>) :
             ).show()
         }
     }
+
+
+
+
+
 
 
     private fun checkRequestStatus(

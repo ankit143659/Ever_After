@@ -1,59 +1,124 @@
 package com.example.ever_after
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Base64
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
+import java.io.ByteArrayInputStream
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Profile.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Profile : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var database: DatabaseReference
+    private lateinit var usernameTextView: TextView
+    private lateinit var emailTextView: TextView
+    private lateinit var phoneTextView: TextView
+    private lateinit var gridLayout: GridLayout
+    // Use the actual userId dynamically
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
+        val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        // Initialize Firebase Database Reference
+        val auth = FirebaseAuth.getInstance().currentUser
+        val userId = auth?.uid
+        database = userId?.let { FirebaseDatabase.getInstance().getReference("Users").child(it) }!!
+
+        // Initialize Views
+        usernameTextView = view.findViewById(R.id.username)
+        emailTextView = view.findViewById(R.id.bio) // Assuming bio TextView is for email
+        phoneTextView = view.findViewById(R.id.friends_count) // Assuming friends_count is for phone
+        gridLayout = view.findViewById(R.id.gridLayout)
+
+        fetchUserData()
+
+        return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Profile.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Profile().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun fetchUserData() {
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot.exists()) {
+                    val name = snapshot.child("name").getValue(String::class.java)
+                    val email = snapshot.child("email").getValue(String::class.java)
+                    val phone = snapshot.child("phone").getValue(String::class.java)
+
+                    usernameTextView.text = name
+                    emailTextView.text = email
+                    phoneTextView.text = phone
+
+                    val imagesSnapshot = snapshot.child("Images")
+                    val imageUrls = mutableListOf<String>()
+
+                    for (image in imagesSnapshot.children) {
+                        val imageUrl = image.getValue(String::class.java)
+                        if (!imageUrl.isNullOrEmpty()) {
+                            imageUrls.add(imageUrl)
+                        }
+                    }
+
+                    displayImages(imageUrls)
                 }
             }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("FirebaseError", "Error fetching data: ${error.message}")
+            }
+        })
+    }
+
+    private fun displayImages(imageUrls: List<String>) {
+        gridLayout.removeAllViews()
+
+        for (imageUrl in imageUrls) {
+            val cardView = CardView(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(250, 250)
+                radius = 20f
+                elevation = 6f
+            }
+
+            val imageView = ImageView(requireContext()).apply {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                scaleType = ImageView.ScaleType.CENTER_CROP
+            }
+
+            // Convert Base64 string to Bitmap
+            val bitmap = decodeBase64ToBitmap(imageUrl)
+            if (bitmap != null) {
+                imageView.setImageBitmap(bitmap)
+            } else {
+                Log.e("ImageDecodeError", "Failed to decode Base64 image")
+            }
+
+            cardView.addView(imageView)
+            gridLayout.addView(cardView)
+        }
+    }
+
+    private fun decodeBase64ToBitmap(encodedString: String): Bitmap? {
+        return try {
+            val decodedBytes = Base64.decode(encodedString, Base64.DEFAULT)
+            BitmapFactory.decodeStream(ByteArrayInputStream(decodedBytes))
+        } catch (e: Exception) {
+            Log.e("Base64Error", "Error decoding Base64 string: ${e.message}")
+            null
+        }
     }
 }

@@ -44,7 +44,7 @@ class Home : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         userModelList = mutableListOf()
-        adapter = UserHomeAdapter(userModelList)
+        adapter = UserHomeAdapter(userModelList,requireContext())
         recyclerView.adapter = adapter
 
         val userId = FirebaseAuth.getInstance().currentUser?.uid

@@ -13,6 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 
 class LoginPage : AppCompatActivity() {
     private lateinit var btnLogin: Button
@@ -20,6 +22,7 @@ class LoginPage : AppCompatActivity() {
     private lateinit var btnGoogle: Button
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +79,10 @@ class LoginPage : AppCompatActivity() {
                 if (task.isSuccessful) {
                     val user = firebaseAuth.currentUser
                     Toast.makeText(this, "Welcome ${user?.displayName}", Toast.LENGTH_SHORT).show()
+
+                    // ✅ FCM token update karne ke liye function call
+                    user?.uid?.let { updateFCMToken(it) }
+
                     startActivity(Intent(this, detailsPage::class.java))
                     finish()
                 } else {
@@ -83,4 +90,28 @@ class LoginPage : AppCompatActivity() {
                 }
             }
     }
+
+    // ✅ Login hone ke baad Firestore me FCM Token Store Karna
+    private fun updateFCMToken(userId: String) {
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.e("FCM", "❌ Failed to get token", task.exception)
+                    return@addOnCompleteListener
+                }
+
+                val fcmToken = task.result
+                Log.d("FCM", "✅ Generated FCM Token: $fcmToken") // Check Logcat
+
+                val userRef = db.collection("Users").document(userId)
+                userRef.update("fcmToken", fcmToken)
+                    .addOnSuccessListener {
+                        Log.d("FCM", "✅ FCM token updated in Firestore.")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e("FCM", "❌ Failed to update FCM token: ${e.message}")
+                    }
+            }
+    }
+
 }

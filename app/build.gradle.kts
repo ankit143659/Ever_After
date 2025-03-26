@@ -9,6 +9,11 @@ android {
     namespace = "com.example.ever_after"
     compileSdk = 35
 
+
+    packagingOptions {
+        exclude("META-INF/DEPENDENCIES'")
+    }
+
     defaultConfig {
         applicationId = "com.example.ever_after"
         minSdk = 24
@@ -42,11 +47,10 @@ android {
 
 dependencies {
 
-    implementation ("com.google.android.gms:play-services-location:21.0.1")
-    implementation ("org.osmdroid:osmdroid-android:6.1.16")
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
-    implementation ("com.android.volley:volley:1.2.1")
-    implementation ("de.hdodenhof:circleimageview:3.1.0")
+    implementation (libs.osmdroid.android)
+    implementation (libs.play.services.maps)
+    implementation (libs.volley)
+    implementation (libs.circleimageview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material.v180)
@@ -55,7 +59,7 @@ dependencies {
     implementation("com.airbnb.android:lottie:5.0.3")
     implementation(libs.androidx.viewpager2)
     implementation(libs.play.services.auth)
-    implementation("com.google.firebase:firebase-auth:22.2.0")
+    implementation(libs.firebase.auth.v2220)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
@@ -63,7 +67,12 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
-    implementation("com.google.android.gms:play-services-location:21.3.0")
+    implementation(libs.play.services.location)
+    implementation(libs.google.auth.library.oauth2.http){
+        exclude("org.apache.httpcomponents", module = "httpclient")
+    }
+    implementation(libs.okhttp)
+    implementation(libs.firebase.messaging)
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.cardview)

@@ -4,32 +4,34 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Window
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.messaging.FirebaseMessaging
 
 class login_page : AppCompatActivity() {
-    private lateinit var btnLogin : Button
+    private lateinit var btnLogin: Button
     private lateinit var lottieAnimationView: LottieAnimationView
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
     private lateinit var password: EditText
+    private lateinit var share: SharePrefrence
+    private lateinit var loadingDialog: Dialog
+    private val database = FirebaseDatabase.getInstance().reference // ✅ Realtime Database
 
-    private lateinit var share : SharePrefrence
-
-    private lateinit var loadingDialog : Dialog
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContentView(R.layout.activity_login_page2)
+
         btnLogin = findViewById(R.id.btnLogin)
         lottieAnimationView = findViewById(R.id.lotti)
         lottieAnimationView.playAnimation()
@@ -42,7 +44,7 @@ class login_page : AppCompatActivity() {
 
         setupLoadingDialog()
 
-        btnLogin.setOnClickListener{
+        btnLogin.setOnClickListener {
             loginUser()
         }
     }
@@ -51,8 +53,8 @@ class login_page : AppCompatActivity() {
         loadingDialog = Dialog(this)
         loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         loadingDialog.setContentView(R.layout.loading_dialog)  // Custom Lottie Layout
-        loadingDialog.setCancelable(false)  // Disable outside touch
-        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent) // Transparent BG
+        loadingDialog.setCancelable(false)
+        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
     }
 
     private fun loginUser() {
@@ -79,16 +81,42 @@ class login_page : AppCompatActivity() {
         auth.signInWithEmailAndPassword(Email, Pass)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    if (user != null) {
+                        updateFCMToken(user.uid)  // 🔥 Store FCM token in Realtime DB
+                    }
                     loadingDialog.dismiss()
                     share.loginState(true)
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
                     val intent = Intent(this, detailsPage::class.java)
                     startActivity(intent)
+                    finish()
                 } else {
                     loadingDialog.dismiss()
                     Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                 }
             }
+    }
+
+    private fun updateFCMToken(userId: String) {
+        FirebaseMessaging.getInstance().token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.e("LoginActivity", "❌ FCM token generation failed", task.exception)
+                return@addOnCompleteListener
+            }
+
+            val fcmToken = task.result
+            val userRef = database.child("Users").child(userId) // ✅ Store in Realtime DB
+
+            val tokenMap = mapOf("fcmToken" to fcmToken)
+            userRef.updateChildren(tokenMap)
+                .addOnSuccessListener {
+                    Log.d("LoginActivity", "✅ FCM token updated in Realtime Database.")
+                }
+                .addOnFailureListener { e ->
+                    Log.e("LoginActivity", "❌ Failed to update FCM token: ${e.message}")
+                }
+        }
     }
 
     private fun isValidEmail(email: String): Boolean {

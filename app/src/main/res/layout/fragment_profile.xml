@@ -2,38 +2,37 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="20dp"
+    app:cardElevation="12dp"
     android:padding="16dp"
-    tools:context=".MainActivity">
+    android:layout_margin="16dp"
+    android:background="@color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"
-        android:background="@color/white"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
         <!-- Profile Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginTop="20dp"
+            android:gravity="center"
             android:paddingBottom="16dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profile_image"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:background="@drawable/image_circle"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/logo"
                 android:scaleType="centerCrop"
-                app:shapeAppearanceOverlay="@style/CircleImage"
-                android:src="@drawable/logo" />
+                android:background="@drawable/image_circle"
+                android:elevation="8dp" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -45,10 +44,10 @@
                     android:id="@+id/username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:text="Username"
                     android:textColor="@color/black"
                     android:fontFamily="@font/font1"
-                    android:text="Username"
-                    android:textSize="20sp"
+                    android:textSize="22sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -56,8 +55,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Friends: 99"
-                    android:fontFamily="@font/font1"
-                    android:textColor="@android:color/darker_gray"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/font2"
                     android:textSize="16sp" />
             </LinearLayout>
         </LinearLayout>
@@ -67,105 +66,26 @@
             android:id="@+id/bio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/font1"
             android:text="This is the bio section where user details can be added."
             android:textSize="16sp"
-            android:paddingBottom="16dp"
-            android:textColor="@android:color/black" />
+            android:textColor="@android:color/white"
+            android:paddingBottom="10dp"
+            android:fontFamily="@font/font2" />
 
         <View
-            android:layout_width="wrap_content"
-            android:background="@color/chip_selected"
-            android:layout_marginTop="20dp"
-            android:layout_height="2dp">
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:background="@android:color/darker_gray"
+            android:layout_marginBottom="20dp"/>
 
-        </View>
-
-        <!-- Grid Layout for 6 Images with CardView -->
+        <!-- 🔥 Grid Layout for Dynamic Images -->
         <GridLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/gridLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:layout_marginTop="40dp"
-            android:rowCount="2"
             android:layout_gravity="center"
-            android:useDefaultMargins="true">
+            android:padding="5dp"/>
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                android:layout_marginLeft="20dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="12dp"
-                android:layout_marginLeft="20dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="12dp"
-                android:layout_marginLeft="20dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="90dp"
-                android:layout_marginLeft="20dp"
-                android:layout_height="90dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="4dp">
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/logo" />
-            </androidx.cardview.widget.CardView>
-        </GridLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>
