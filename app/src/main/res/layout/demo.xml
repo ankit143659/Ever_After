@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#F5F5F5">
+    android:background="@color/black">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                     android:layout_marginBottom="15dp"
                     android:background="@drawable/match_bg"
                     android:padding="8dp"
-                    android:text="87% Match"
+                    android:text="Communitity"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
