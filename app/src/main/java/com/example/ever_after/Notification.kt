@@ -1,71 +1,113 @@
 package com.example.ever_after
 
-import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.fragment.app.Fragment
+import com.google.android.material.card.MaterialCardView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [Notification.newInstance] factory method to
- * create an instance of this fragment.
- */
 class Notification : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
-    }
+    private lateinit var requestRef: DatabaseReference
+    private lateinit var userRef: DatabaseReference
+    private lateinit var requestContainer: LinearLayout
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_notification, container, false)
+        requestContainer = view.findViewById(R.id.requestContainer)
 
-        // Find ImageView by ID
-        val chatEye: ImageView = view.findViewById(R.id.chateye)
-
-        // Set click listener to navigate to the target activity
-        chatEye.setOnClickListener {
-            val intent = Intent(requireContext(), UserListActivity::class.java)
-            startActivity(intent)
-        }
-
+        listenForNewRequests()
         return view
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment Notification.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            Notification().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun listenForNewRequests() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+        requestRef =
+            FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Requests")
+        userRef = FirebaseDatabase.getInstance().reference.child("Users")
+
+        requestRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val senderId = snapshot.child("senderId").getValue(String::class.java) ?: return
+                val status = snapshot.child("status").getValue(String::class.java)
+                if (status == "accepted") return
+                fetchSenderName(senderId, snapshot.key!!)
+            }
+
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onChildRemoved(snapshot: DataSnapshot) {}
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    private fun fetchSenderName(senderId: String, requestId: String) {
+        userRef.child(senderId).child("name")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val senderName = snapshot.getValue(String::class.java)
+                    senderName?.let {
+                        addRequestUI(it, senderId, requestId)
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
+    private fun addRequestUI(senderName: String, senderId: String, requestId: String) {
+        if (!isAdded || activity == null) return  // 🔥 Fragment attached है या नहीं check करो
+
+        requireActivity().runOnUiThread {
+            val requestView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.request_design, requestContainer, false)
+
+            val username = requestView.findViewById<TextView>(R.id.username)
+            val acceptButton = requestView.findViewById<MaterialCardView>(R.id.btn_accept)
+            val rejectButton = requestView.findViewById<MaterialCardView>(R.id.btn_reject)
+
+            username.text = senderName
+
+            val senderRef = FirebaseDatabase.getInstance().reference.child("Users").child(senderId)
+                .child("Requests")
+
+            acceptButton.setOnClickListener {
+                requestRef.child(requestId).child("status").setValue("accepted")
+                    .addOnCompleteListener { task1 ->
+                        if (task1.isSuccessful) {
+                            senderRef.child(requestId).child("status").setValue("accepted")
+                                .addOnCompleteListener { task2 ->
+                                    if (task2.isSuccessful) {
+                                        requestContainer.removeView(requestView)
+                                    }
+                                }
+                        }
+                    }
+            }
+
+            rejectButton.setOnClickListener {
+                requestRef.child(requestId).removeValue().addOnCompleteListener { task1 ->
+                    if (task1.isSuccessful) {
+                        senderRef.child(requestId).removeValue().addOnCompleteListener { task2 ->
+                            if (task2.isSuccessful) {
+                                requestContainer.removeView(requestView)
+                            }
+                        }
+                    }
                 }
             }
+
+            requestContainer.addView(requestView)
+        }
     }
 }

@@ -36,15 +36,15 @@
                 android:text="Rohit Sharma"
                 android:textStyle="bold"
                 android:textSize="16sp"
-                android:textColor="@color/black"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
+                android:textColor="@color/white"  android:layout_height="wrap_content" android:layout_width="wrap_content"/>
 
             <TextView
                 android:id="@+id/notification_text"
                 android:fontFamily="@font/font1"
-                android:text="sent you a connection request"
+                android:text="sent you request"
                 android:layout_height="wrap_content" android:layout_width="wrap_content"
                 android:textSize="15sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
@@ -74,6 +74,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="12dp"
+                    android:id="@+id/accept"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_check"
                     app:tint="@color/chip_selected" />
@@ -100,6 +101,7 @@
 
                 <ImageView
                     android:layout_width="match_parent"
+                    android:id="@+id/reject"
                     android:layout_height="match_parent"
                     android:padding="12dp"
                     android:scaleType="centerInside"
