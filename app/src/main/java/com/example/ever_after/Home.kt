@@ -102,8 +102,14 @@ class Home : Fragment() {
                     if (userId == currentUserId || dislikedUsers.contains(userId)) continue
 
                     val userDetails = userSnapshot.child("Details")
+                    val userGender = userDetails.child("Gender").value.toString().trim()
+
+                    // Filter out users jinka gender current user's MeetingPerson se match nahi karta
+                    if (userGender != currentMeetingPerson) continue
+
                     val userImages = userSnapshot.child("Images")
                     val user = userDetails.getValue(UserModel::class.java)
+
 
                     if (user != null ) {
                         user.userId = userId
@@ -144,7 +150,7 @@ class Home : Fragment() {
                         val matchPercentage: Int = ((matchCount.toDouble() / totalCriteria) * 100).toInt()
 
                         // ✅ Final Condition: At least 3 Matches & 50% Match Percentage
-                        if (matchCount >= 3 && matchPercentage >= 20) {
+                        if (matchCount >= 2 && matchPercentage >= 10) {
                             user.matchPercentage = matchPercentage.toString() // Save Match Percentage in Model
                             userModelList.add(user)
                         }

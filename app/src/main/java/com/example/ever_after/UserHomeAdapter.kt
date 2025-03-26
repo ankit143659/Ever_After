@@ -100,7 +100,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                 it,
                 user.userId,
                 holder.Chat_Button,
-                holder.sendRequestButton
+                holder.sendRequestButton,
+                holder.Dis_like
             )
         }
 
@@ -112,7 +113,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                         it1,
                         user.userId,
                         holder.sendRequestButton,
-                        holder.Chat_Button
+                        holder.Chat_Button,holder.Dis_like
                     )
                 } // ✅ Sender = Current User, Receiver = Selected User
             } else {
@@ -121,14 +122,18 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         }
         holder.Dis_like.setOnClickListener {
             if (databaseRef != null) {
-                Log.d("DislikeUser", "Disliking User ID: ${user.userId}")  // Debugging ke liye
+                Log.d("DislikeUser", "Disliking User ID: ${user.userId}")
 
                 databaseRef.child(user.userId).setValue(true)
                     .addOnSuccessListener {
-                        userList.removeAt(position)
-                        notifyItemRemoved(position)
-                        notifyItemRangeChanged(position, userList.size)
-                        Log.d("DislikeUser", "User ${user.userId} disliked successfully")
+                        if (position >= 0 && position < userList.size) { // Safe check
+                            userList.removeAt(position)
+                            notifyItemRemoved(position)
+                            notifyItemRangeChanged(position, userList.size)
+                            Log.d("DislikeUser", "User ${user.userId} disliked successfully")
+                        } else {
+                            Log.e("DislikeUser", "Invalid position: $position, Size: ${userList.size}")
+                        }
                     }
                     .addOnFailureListener { e ->
                         Log.e("DislikeUser", "Error disliking user: ${e.message}")
@@ -149,7 +154,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         senderId: String,
         receiverId: String,
         sendRequestButton: Button,
-        chatButton: ImageButton
+        chatButton: ImageButton,
+        Dis_like:ImageButton
     ) {
         val database = FirebaseDatabase.getInstance().reference
 
@@ -182,7 +188,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     senderId,
                     receiverId,
                     chatButton,
-                    sendRequestButton
+                    sendRequestButton,
+                    Dis_like
                 )  // ✅ Status Update
             }.addOnFailureListener { e ->
                 Toast.makeText(
@@ -210,7 +217,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         senderId: String,
         receiverId: String,
         chatButton: ImageButton,
-        sendRequestButton: Button
+        sendRequestButton: Button,
+        Dis_like: ImageButton
     ) {
         val senderRequestRef = FirebaseDatabase.getInstance()
             .getReference("Users")
@@ -224,6 +232,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     if (request?.receiverId == receiverId) {
                         if (request.status == "accepted") {
                             chatButton.visibility = View.VISIBLE  // ✅ Chat Button Show
+                            Dis_like.visibility = View.GONE  // ✅ Chat Button Show
                             sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
                         } else if (request.status == "pending") {
                             sendRequestButton.text = "Request Sent"

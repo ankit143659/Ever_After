@@ -298,6 +298,8 @@ class Setting : Fragment() {
 
                 for (userSnapshot in snapshot.children) {
                     val name = userSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
+                    val User_Gender = userSnapshot.child("Detail").child("Gender").getValue(String::class.java) ?: "Unknown"
+                    Log.d("Gender",User_Gender)
                     val lat = userSnapshot.child("latitude").getValue(Double::class.java) ?: 0.0
                     val lng = userSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
 
