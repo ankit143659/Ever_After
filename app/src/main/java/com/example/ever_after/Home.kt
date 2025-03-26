@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -19,6 +20,8 @@ import com.google.firebase.database.ValueEventListener
 
 class Home : Fragment() {
     private lateinit var recyclerView: RecyclerView
+    private lateinit var shimmerViewContainer: ShimmerFrameLayout
+
     private lateinit var adapter: UserHomeAdapter
     private lateinit var userModelList: MutableList<UserModel>
     private lateinit var database: DatabaseReference
@@ -35,13 +38,15 @@ class Home : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val ChatButton:FloatingActionButton=view.findViewById(R.id.fab_chat)
-
+        shimmerViewContainer =view.findViewById(R.id.shimmer_view_container)
         recyclerView = view.findViewById(R.id.recycler_view)
         ChatButton.setOnClickListener {
             val intent = Intent(requireContext(), UserListActivity::class.java)
             startActivity(intent)
         }
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.itemAnimator = null
+
 
         userModelList = mutableListOf()
         adapter = UserHomeAdapter(userModelList,requireContext())
@@ -55,12 +60,14 @@ class Home : Fragment() {
             database.child(userId).child("Details").get()
                 .addOnSuccessListener { snapshot ->
                     if (snapshot.exists()) {
+
                         currentUserInterests = snapshot.child("Hope").child("Interest").value.toString().trim()
                         currentUserGender = snapshot.child("Gender").value.toString().trim()
 
                         if (currentUserInterests.isNotEmpty() && currentUserGender.isNotEmpty()) {
                             Log.d("FirebaseUser", "Fetched Interests: $currentUserInterests, Gender: $currentUserGender")
                             fetchMatchingProfiles(userId)
+
                         } else {
                             Log.e("FirebaseUser", "Interest or Gender is missing for user: $userId")
                         }
@@ -75,7 +82,7 @@ class Home : Fragment() {
 
     }
     private fun fetchMatchingProfiles(currentUserId: String) {
-        database.addValueEventListener(object : ValueEventListener {
+        database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userModelList.clear()
 
@@ -159,7 +166,9 @@ class Home : Fragment() {
 
                 // ✅ Sort by Highest Match Percentage
                 userModelList.sortByDescending { it.matchPercentage }
-
+                shimmerViewContainer.stopShimmer()
+                shimmerViewContainer.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
                 adapter.notifyDataSetChanged()
             }
 

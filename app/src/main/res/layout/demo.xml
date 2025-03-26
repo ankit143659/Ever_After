@@ -1,145 +1,109 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/black">
+    android:background="#040303">
 
-    <LinearLayout
+
+
+    <!-- User Name and Age -->
+
+    <!-- Location -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:id="@+id/card"
+        android:layout_margin="16dp"
+        android:layout_marginStart="16dp"
+        app:cardCornerRadius="30dp">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/profile_image"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/tony"/>
+
+
+        <TextView
+            android:id="@+id/user_name_age"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profile_image"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="470dp"
+            android:text="Joji , 25"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/religion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/user_name_age"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="500dp"
+            android:text="Singer"
+            android:textColor="@color/black"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/match_percentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="87% Match"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@drawable/match_bg"
+            android:padding="8dp"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="15dp"/>
+
+    </androidx.cardview.widget.CardView>
+    <!-- Button Container -->
+    <RelativeLayout
+        android:id="@+id/button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+       android:layout_below="@+id/card"
+     android:layout_marginStart="50dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center_horizontal">
 
-        <!-- Profile Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            app:cardCornerRadius="25dp"
-            app:cardElevation="10dp"
-            app:cardBackgroundColor="@android:color/white">
+        <!-- Dislike Button -->
+        <ImageButton
+            android:id="@+id/dislike_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/baseline_close_24"
+            app:backgroundTint="@color/black"
+            tools:ignore="UseAppTint" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+        <!-- Pause Button -->
+        <ImageButton
+            android:id="@+id/Detail_Button"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/black"
+            android:src="@drawable/baseline_account_circle_24"
+            app:tint="@color/red" />
 
-                <!-- Profile Image with Rounded Corners -->
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/tony" />
-
-                <!-- Gradient Overlay -->
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:background="@drawable/gradient_overlay" />
-
-                <!-- Name and Age -->
-                <TextView
-                    android:id="@+id/profile_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tony Stark, 27"
-                    android:textSize="20sp"
-                    android:textColor="@android:color/black"
-                    android:textStyle="bold"
-                    android:layout_margin="10dp" />
-
-                <TextView
-                    android:id="@+id/Communitity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/profile_name"
-                    android:layout_margin="15dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_marginTop="33dp"
-                    android:layout_marginEnd="207dp"
-                    android:layout_marginBottom="15dp"
-                    android:background="@drawable/match_bg"
-                    android:padding="8dp"
-                    android:text="Communitity"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/match_percentage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="87% Match"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:textColor="@color/black"
-                    android:background="@drawable/match_bg"
-                    android:padding="8dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_margin="15dp"/>
-
-
-
-                <!-- Interests ScrollView -->
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    android:scrollbars="none">
-
-                    <LinearLayout
-                        android:id="@+id/interestsLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="10dp"/>
-                </HorizontalScrollView>
-
-                <!-- Button Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="start"
-                    android:padding="10dp"
-                    android:weightSum="3">
-
-                    <ImageButton
-                        android:id="@+id/dis_like"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/white"
-                        android:src="@android:drawable/ic_menu_close_clear_cancel"
-                        android:scaleType="centerInside"/>
-
-                    <Button
-                        android:id="@+id/send_request_button"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/red"
-                        android:text="Send Request"
-                        android:textColor="@android:color/white"
-                        android:textSize="14sp"/>
-
-                    <ImageButton
-                        android:id="@+id/chat_button"
-                        android:layout_width="0dp"
-                        android:visibility="gone"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:backgroundTint="@color/red"
-                        android:src="@android:drawable/ic_dialog_email"
-                        android:scaleType="centerInside"/>
-                </LinearLayout>
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-    </LinearLayout>
-</ScrollView>
+        <!-- Like Button -->
+        <ImageButton
+            android:id="@+id/like_button"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/h"
+            app:tint="@color/red"
+            app:backgroundTint="@color/black"
+             />
+    </RelativeLayout>
+</RelativeLayout>

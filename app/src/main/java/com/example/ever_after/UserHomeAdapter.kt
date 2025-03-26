@@ -1,6 +1,5 @@
 package com.example.ever_after
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,21 +14,29 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
+import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody.Companion.toRequestBody
 import org.json.JSONObject
+import java.io.IOException
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
@@ -39,13 +46,13 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val profileImage: ImageView = view.findViewById(R.id.profile_image)
-        val nameText: TextView = view.findViewById(R.id.profile_name)
-        val Community: TextView = view.findViewById(R.id.Communitity)
+        val nameText: TextView = view.findViewById(R.id.user_name_age)
+        val religion: TextView = view.findViewById(R.id.religion)
         val match_percentage: TextView = view.findViewById(R.id.match_percentage)
-        val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
-        val sendRequestButton: Button = view.findViewById(R.id.send_request_button)
-        val Chat_Button: ImageButton = view.findViewById(R.id.chat_button)
-        val Dis_like: ImageButton = view.findViewById(R.id.dis_like)
+//        val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
+        val like_button : ImageButton = view.findViewById(R.id.like_button)
+        val Chat_Button: ImageButton = view.findViewById(R.id.Detail_Button)
+        val Dis_like: ImageButton = view.findViewById(R.id.dislike_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -59,19 +66,25 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         val user = userList[position]
         val age = calculateAge(user.DOB)
         holder.nameText.text = if (age >= 0) "${user.name}, $age" else "${user.name}, Invalid DOB"
-        holder.Community.text = user.Communities
-        holder.match_percentage.text = "${user.matchPercentage}%"
+       holder.religion.text = user.Religion
 
-        val layoutParams = holder.itemView.layoutParams
-        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-        holder.itemView.layoutParams = layoutParams
+      holder.match_percentage.text = "${user.matchPercentage}%"
+        holder.Chat_Button.setOnClickListener {
+            val fragment = ProfileBottomSheetFragment.newInstance(user.userId)
+            fragment.show((holder.itemView.context as AppCompatActivity).supportFragmentManager, "profileBottomSheet")
+        }
+
+//        val layoutParams = holder.itemView.layoutParams
+//        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+//        holder.itemView.layoutParams = layoutParams
 
         // **Decode Base64 Image**
-        if (!user.Image1.isNullOrEmpty()) {
-            Log.d("UserAdapter", "Base64 Image Length: ${user.Image1!!.length}")
-            holder.profileImage.setImageBitmap(user.Image1?.let { decodeBase64ToBitmap(it) })
+        val profileBitmap = decodeBase64ToBitmap(user.Image1)
+
+        if (profileBitmap != null) {
+            holder.profileImage.setImageBitmap(profileBitmap)
         } else {
-            holder.profileImage.setImageResource(R.drawable.tony)
+            holder.profileImage.setImageResource(R.drawable.tony) // Use a default image
         }
         val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
         val databaseRef =
@@ -80,40 +93,39 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
             }
 
 
-        // **Dynamically Add Interests**
-        holder.interestsLayout.removeAllViews()
-        user.Interest.split(",").map { it.trim() }.forEach { interest ->
-            val textView = TextView(holder.itemView.context).apply {
-                text = interest
-                setPadding(16, 8, 16, 8)
-                setBackgroundResource(R.drawable.tag_bg)
-                setTextColor(Color.WHITE)
-                textSize = 14f
-                setTypeface(typeface, Typeface.BOLD)
-            }
-            holder.interestsLayout.addView(textView)
-        }
+//        // **Dynamically Add Interests**
+//        holder.interestsLayout.removeAllViews()
+//        user.Interest.split(",").map { it.trim() }.forEach { interest ->
+//            val textView = TextView(holder.itemView.context).apply {
+//                text = interest
+//                setPadding(16, 8, 16, 8)
+//                setBackgroundResource(R.drawable.tag_bg)
+//                setTextColor(Color.WHITE)
+//                textSize = 14f
+//                setTypeface(typeface, Typeface.BOLD)
+//            }
+//            holder.interestsLayout.addView(textView)
+//        }
 
 // ✅ **Check Status Before Showing Buttons**
         currentUserId?.let {
             checkRequestStatus(
                 it,
                 user.userId,
-                holder.Chat_Button,
-                holder.sendRequestButton,
+                holder.like_button,
                 holder.Dis_like
             )
         }
 
         // **Step 2: Handle Click Event for Send Request Button**
-        holder.sendRequestButton.setOnClickListener {
+        holder.like_button.setOnClickListener {
             if (user.userId.isNotEmpty()) {
                 currentUserId?.let { it1 ->
                     sendRequest(
                         it1,
                         user.userId,
-                        holder.sendRequestButton,
-                        holder.Chat_Button,holder.Dis_like
+                        holder.like_button,
+                       holder.Dis_like
                     )
                 } // ✅ Sender = Current User, Receiver = Selected User
             } else {
@@ -126,10 +138,15 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
 
                 databaseRef.child(user.userId).setValue(true)
                     .addOnSuccessListener {
-                        if (position >= 0 && position < userList.size) { // Safe check
+                        Log.d("DislikeUser", "Before Removal - Position: $position, List Size: ${userList.size}")
+
+                        if (position in userList.indices) { // Ensure valid position
                             userList.removeAt(position)
                             notifyItemRemoved(position)
-                            notifyItemRangeChanged(position, userList.size)
+
+                            // RecyclerView shifting issue fix
+                            notifyItemRangeChanged(position, userList.size - position)
+
                             Log.d("DislikeUser", "User ${user.userId} disliked successfully")
                         } else {
                             Log.e("DislikeUser", "Invalid position: $position, Size: ${userList.size}")
@@ -145,16 +162,26 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
 
     override fun getItemCount() = userList.size
 
-    fun decodeBase64ToBitmap(base64String: String): Bitmap {
-        val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
-        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+    fun decodeBase64ToBitmap(base64Str: String?): Bitmap? {
+        if (base64Str.isNullOrEmpty()) {
+            Log.e("DecodeError", "Base64 string is null or empty")
+            return null
+        }
+
+        return try {
+            val decodedBytes = Base64.decode(base64Str, Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (e: Exception) {
+            Log.e("DecodeError", "Error decoding Base64: ${e.message}")
+            null
+        }
     }
+
 
     private fun sendRequest(
         senderId: String,
         receiverId: String,
-        sendRequestButton: Button,
-        chatButton: ImageButton,
+        sendRequestButton: ImageButton,
         Dis_like:ImageButton
     ) {
         val database = FirebaseDatabase.getInstance().reference
@@ -181,12 +208,13 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     "Request Sent",
                     Toast.LENGTH_SHORT
                 ).show()
-                sendRequestButton.text = "Request Sent"
+                sendNotificationToProvider(receiverId,"New Request","New Friend Requested")
+
+              //  sendRequestButton.text = "Request Sent"
                 sendRequestButton.isEnabled = false
                 checkRequestStatus(
                     senderId,
                     receiverId,
-                    chatButton,
                     sendRequestButton,
                     Dis_like
                 )  // ✅ Status Update
@@ -207,16 +235,10 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     }
 
 
-
-
-
-
-
     private fun checkRequestStatus(
         senderId: String,
         receiverId: String,
-        chatButton: ImageButton,
-        sendRequestButton: Button,
+        sendRequestButton: ImageButton,
         Dis_like: ImageButton
     ) {
         val senderRequestRef = FirebaseDatabase.getInstance()
@@ -230,12 +252,11 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     val request = requestSnapshot.getValue(RequestModel::class.java)
                     if (request?.receiverId == receiverId) {
                         if (request.status == "accepted") {
-                            chatButton.visibility = View.VISIBLE  // ✅ Chat Button Show
-                            Dis_like.visibility = View.GONE  // ✅ Chat Button Show
-                            sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
+//                            Dis_like.visibility = View.GONE  // ✅ Chat Button Show
+//                            sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
                         } else if (request.status == "pending") {
-                            sendRequestButton.text = "Request Sent"
-                            sendRequestButton.isEnabled = false
+                           // sendRequestButton.text = "Request Sent"
+//                            sendRequestButton.isEnabled = false
                         }
                         return  // ✅ Matching request mil gaya, loop se exit ho jao
                     }
@@ -259,6 +280,101 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
             -1 // 👈 Return -1 if error occurs (Invalid DOB format)
         }
     }
+    private fun sendNotificationToProvider(receiverId: String, title: String, message: String) {
+        val db = FirebaseDatabase.getInstance()
+        db.getReference("Users").child(receiverId).get()
+            .addOnSuccessListener { document ->
+                if (document.exists()) {
+                    val fcmToken = document.child("fcmToken").value.toString()
+                    Log.d("FCM", fcmToken)
+                    if (!fcmToken.isNullOrEmpty()) {
+                        CoroutineScope(Dispatchers.IO).launch {
+                            sendFCMNotification(fcmToken, title, message)
+                        }
+                    } else {
+                        Log.e("FCM", "Provider FCM Token is Empty")
+                    }
+                } else {
+                    Log.e("FCM", "Provider Not Found")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("FCM", "Failed to fetch provider data: ${e.message}")
+            }
+    }
 
+    private suspend fun sendFCMNotification(providerToken: String, title: String, body: String) {
+        val fcmUrl = "https://fcm.googleapis.com/v1/projects/ever-after-2c973/messages:send"
 
-}
+        val accessToken = TokenManager.getAccessToken(context) // Get Firebase Access Token
+        if (accessToken == null) {
+            Log.e("FCM", "Failed to generate access token")
+            return
+        }
+
+        val jsonObject = JSONObject().apply {
+            put("message", JSONObject().apply {
+                put("token", providerToken)
+                put("notification", JSONObject().apply {
+                    put("title", title)
+                    put("body", body)
+                })
+            })
+        }
+
+        val requestBody = jsonObject.toString().toRequestBody("application/json".toMediaType())
+
+        val request = Request.Builder()
+            .url(fcmUrl)
+            .post(requestBody)
+            .addHeader("Authorization", "Bearer $accessToken")
+            .addHeader("Content-Type", "application/json")
+            .build()
+
+        withContext(Dispatchers.IO) {
+            try {
+                val response = OkHttpClient().newCall(request).execute()
+                Log.d("FCM", "Notification Response: ${response.body?.string()}")
+            } catch (e: Exception) {
+                Log.e("FCM", "Error sending notification: ${e.message}")
+            }
+        }
+    }
+
+    object TokenManager {
+        private var cachedToken: String? = null
+        private var tokenExpiryTime: Long = 0L
+
+        suspend fun getAccessToken(context: Context): String? {
+            val currentTime = System.currentTimeMillis()
+
+            // ✅ Pehle se token hai aur expire nahi hua, to wahi return karo
+            if (cachedToken != null && currentTime < tokenExpiryTime) {
+                Log.d("FCM", "Using Cached Token: $cachedToken")
+                return cachedToken
+            }
+
+            return withContext(Dispatchers.IO) {
+                try {
+                    val jsonStream = context.assets.open("service-account.json")
+                    val googleCredentials = GoogleCredentials.fromStream(jsonStream)
+                        .createScoped(listOf("https://www.googleapis.com/auth/firebase.messaging"))
+
+                    googleCredentials.refreshIfExpired()
+                    val newToken = googleCredentials.accessToken?.tokenValue
+                    val expiresIn = googleCredentials.accessToken?.expirationTime?.time ?: 0L // ✅ Fixed
+
+                    if (newToken != null) {
+                        cachedToken = newToken
+                        tokenExpiryTime = expiresIn
+                    }
+
+                    Log.d("FCM", "Generated New Token: $newToken")
+                    newToken
+                } catch (e: IOException) {
+                    Log.e("FCM", "Error getting access token: ${e.message}")
+                    null
+                }
+            }
+        }
+    }}

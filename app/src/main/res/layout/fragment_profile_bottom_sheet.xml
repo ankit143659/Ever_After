@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="10dp"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+    <!-- Shimmer Effect Wrapper -->
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shimmer_auto_start="true"
+        app:shimmer_duration="1000">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            android:padding="16dp">
+
+            <!-- Profile Image Placeholder -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@android:color/darker_gray"
+                android:layout_gravity="center"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Name Placeholder -->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="8dp"/>
+
+            <!-- Email Placeholder -->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Phone Placeholder -->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="4dp"/>
+
+            <!-- Other Details Placeholder -->
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="4dp"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="4dp"/>
+
+            <View
+                android:layout_width="wrap_content"
+                android:layout_height="16dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="4dp"/>
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:visibility="gone"
+        android:id="@+id/detail"
+        android:layout_height="match_parent">
+
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:src="@drawable/tony"/>
+    <!-- User Name -->
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/profileImageView"
+        android:layout_centerHorizontal="true"
+        android:text="Aryan Singh"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"/>
+
+    <!-- Email -->
+    <TextView
+        android:id="@+id/emailTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nameTextView"
+        android:layout_centerHorizontal="true"
+        android:text="Email: aryan@example.com"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Phone Number -->
+    <TextView
+        android:id="@+id/phoneTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/emailTextView"
+        android:layout_centerHorizontal="true"
+        android:text="Phone: +91 9876543210"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Date of Birth -->
+    <TextView
+        android:id="@+id/dobTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/phoneTextView"
+        android:layout_centerHorizontal="true"
+        android:text="DOB: 03/06/2003"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Gender -->
+    <TextView
+        android:id="@+id/genderTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/dobTextView"
+        android:text="Gender: Man"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Height -->
+    <TextView
+        android:id="@+id/heightTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/genderTextView"
+        android:text="Height: 105 cm"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Communities -->
+    <TextView
+        android:id="@+id/communitiesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/heightTextView"
+        android:text="Communities: Environmentalism"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Interests -->
+    <TextView
+        android:id="@+id/interestsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/communitiesTextView"
+        android:text="Interests: 🖌️ Crafts, 🎭 Art, 💃 Dancing"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Drinking Status -->
+    <TextView
+        android:id="@+id/drinkingStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/interestsTextView"
+        android:text="Drinks: I drink sometimes"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Smoking Status -->
+    <TextView
+        android:id="@+id/smokingStatusTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/drinkingStatusTextView"
+        android:text="Smokes: I smoke sometimes"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Meeting Person -->
+    <TextView
+        android:id="@+id/meetingPersonTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/smokingStatusTextView"
+        android:text="Meeting: Man"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Purpose -->
+    <TextView
+        android:id="@+id/purposeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/meetingPersonTextView"
+        android:text="Purpose: Date"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Religion -->
+    <TextView
+        android:id="@+id/religionTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/purposeTextView"
+        android:text="Religion: Hindu"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Values -->
+    <TextView
+        android:id="@+id/valuesTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/religionTextView"
+        android:text="Values: Optimism, Openness, Humor"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Have Kids -->
+    <TextView
+        android:id="@+id/haveKidsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/valuesTextView"
+        android:text="Have Kids: Don't have kids"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Interest in Kids -->
+    <TextView
+        android:id="@+id/interestForKidsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/haveKidsTextView"
+        android:text="Interested in Kids: Want kids"
+        android:textSize="16sp"
+        android:layout_marginTop="4dp"/>
+
+    <!-- Close Button -->
+    <Button
+        android:id="@+id/closeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/interestForKidsTextView"
+        android:layout_centerHorizontal="true"
+        android:text="Close"
+        android:layout_marginTop="16dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

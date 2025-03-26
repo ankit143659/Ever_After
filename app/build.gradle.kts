@@ -2,17 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.google.gms.google.services)
-
 }
 
 android {
     namespace = "com.example.ever_after"
     compileSdk = 35
-
-
-    packagingOptions {
-        exclude("META-INF/DEPENDENCIES'")
-    }
 
     defaultConfig {
         applicationId = "com.example.ever_after"
@@ -33,25 +27,35 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
     buildFeatures {
         viewBinding = true
+    }
+
+    // 🛠 Fix for META-INF/DEPENDENCIES issue
+    packaging {
+        resources {
+            excludes += "META-INF/DEPENDENCIES"
+        }
     }
 }
 
 dependencies {
-
-    implementation (libs.osmdroid.android)
-    implementation (libs.play.services.maps)
-    implementation (libs.volley)
-    implementation (libs.circleimageview)
+    implementation ("org.osmdroid:osmdroid-android:6.1.16")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.android.volley:volley:1.2.1")
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation(libs.androidx.core.ktx)
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
     implementation(libs.androidx.appcompat)
     implementation(libs.material.v180)
     implementation(libs.androidx.activity)
@@ -59,7 +63,7 @@ dependencies {
     implementation("com.airbnb.android:lottie:5.0.3")
     implementation(libs.androidx.viewpager2)
     implementation(libs.play.services.auth)
-    implementation(libs.firebase.auth.v2220)
+    implementation("com.google.firebase:firebase-auth:22.2.0")
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
@@ -67,15 +71,13 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.play.services.location)
-    implementation(libs.google.auth.library.oauth2.http){
-        exclude("org.apache.httpcomponents", module = "httpclient")
-    }
-    implementation(libs.okhttp)
-    implementation(libs.firebase.messaging)
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.cardview)
+    implementation ("com.google.auth:google-auth-library-oauth2-http:1.14.0")
+    implementation ("com.squareup.okhttp3:okhttp:4.9.3")
+    implementation(libs.firebase.messaging.ktx)
 
     annotationProcessor(libs.compiler)
     implementation(libs.glide)
