@@ -38,7 +38,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>) :
         val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
         val sendRequestButton: Button = view.findViewById(R.id.send_request_button)
         val Chat_Button: ImageButton = view.findViewById(R.id.chat_button)
-        val Dis_like: ImageButton = view.findViewById(R.id.Dis_like)
+        val Dis_like: ImageButton = view.findViewById(R.id.dis_like)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -54,6 +54,10 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>) :
         holder.nameText.text = if (age >= 0) "${user.name}, $age" else "${user.name}, Invalid DOB"
         holder.Community.text = user.Communities
         holder.match_percentage.text = "${user.matchPercentage}%"
+
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        holder.itemView.layoutParams = layoutParams
 
         // **Decode Base64 Image**
         if (!user.Image1.isNullOrEmpty()) {
@@ -162,7 +166,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>) :
             database.updateChildren(updates).addOnSuccessListener {
                 Toast.makeText(
                     sendRequestButton.context,
-                    "Request Sent & Accepted",
+                    "Request Sent",
                     Toast.LENGTH_SHORT
                 ).show()
                 sendRequestButton.text = "Request Sent"

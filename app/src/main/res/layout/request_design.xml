@@ -8,6 +8,8 @@
     android:layout_margin="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -108,6 +110,26 @@
                     android:src="@drawable/ic_wrong"
                     app:tint="@color/black" />
             </com.google.android.material.card.MaterialCardView>
+
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/profile_name"
+                android:layout_margin="15dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="33dp"
+                android:layout_marginEnd="207dp"
+                android:layout_marginBottom="15dp"
+                android:background="@drawable/match_bg"
+                android:padding="8dp"
+                android:visibility="gone"
+                android:text="Accepted"
+                android:fontFamily="@font/font1"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 

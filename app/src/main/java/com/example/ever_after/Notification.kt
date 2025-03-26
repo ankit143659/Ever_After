@@ -75,6 +75,7 @@ class Notification : Fragment() {
             val username = requestView.findViewById<TextView>(R.id.username)
             val acceptButton = requestView.findViewById<MaterialCardView>(R.id.btn_accept)
             val rejectButton = requestView.findViewById<MaterialCardView>(R.id.btn_reject)
+            val status = requestView.findViewById<TextView>(R.id.status)
 
             username.text = senderName
 
@@ -88,7 +89,10 @@ class Notification : Fragment() {
                             senderRef.child(requestId).child("status").setValue("accepted")
                                 .addOnCompleteListener { task2 ->
                                     if (task2.isSuccessful) {
-                                        requestContainer.removeView(requestView)
+                                        acceptButton.visibility = View.GONE
+                                        rejectButton.visibility = View.GONE
+                                        status.text = "Accepted"
+                                        status.visibility = View.VISIBLE
                                     }
                                 }
                         }
@@ -100,7 +104,10 @@ class Notification : Fragment() {
                     if (task1.isSuccessful) {
                         senderRef.child(requestId).removeValue().addOnCompleteListener { task2 ->
                             if (task2.isSuccessful) {
-                                requestContainer.removeView(requestView)
+                                acceptButton.visibility = View.GONE
+                                rejectButton.visibility = View.GONE
+                                status.text = "Rejected"
+                                status.visibility = View.VISIBLE
                             }
                         }
                     }
