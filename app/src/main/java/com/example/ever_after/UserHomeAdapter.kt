@@ -172,7 +172,6 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
 
             // Correct path for Firebase update
             val updates = hashMapOf<String, Any>(
-                "/Users/$senderId/Requests/$requestKey" to requestData,  // Sender ke under
                 "/Users/$receiverId/Requests/$requestKey" to requestData  // Receiver ke under
             )
 

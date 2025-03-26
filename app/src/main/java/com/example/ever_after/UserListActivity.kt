@@ -66,36 +66,60 @@ class UserListActivity : AppCompatActivity() {
 
 
     private fun fetchUsersFromRealtimeDatabase() {
-        dbRef = FirebaseDatabase.getInstance().getReference("Users")
+        // First, fetch the current user's Friends list.
+        val friendRef = FirebaseDatabase.getInstance().getReference("Users")
+            .child(currentUserId!!).child("Friends")
 
-        dbRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val newList = mutableListOf<AppUser>()
-                val usersToFetch = mutableListOf<AppUser>()
-
-                for (userSnapshot in snapshot.children) {
-                    val id = userSnapshot.key ?: ""
-                    val name = userSnapshot.child("name").getValue(String::class.java) ?: ""
-                    val base64Image = userSnapshot.child("Images").child("Image1").getValue(String::class.java) ?: ""
-
-                    if (id.isNotEmpty() && id != currentUserId) {
-                        val user = AppUser(id, name, "", base64Image,0)
-                        usersToFetch.add(user)
-                    }
+        friendRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(friendSnapshot: DataSnapshot) {
+                // Build a set of friend IDs.
+                val friendIds = mutableSetOf<String>()
+                for (friend in friendSnapshot.children) {
+                    friend.key?.let { friendIds.add(it) }
                 }
 
-                if (usersToFetch.isNotEmpty()) {
-                    fetchLastMessages(usersToFetch) { updatedUsers ->
-                        userAdapter.updateUserList(updatedUsers)
+                // Now, fetch all users from the "Users" node.
+                val usersRef = FirebaseDatabase.getInstance().getReference("Users")
+                usersRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val usersToFetch = mutableListOf<AppUser>()
+
+                        for (userSnapshot in snapshot.children) {
+                            val id = userSnapshot.key ?: continue
+                            // Only include the user if they are in the current user's friend list.
+                            if (!friendIds.contains(id)) continue
+                            // Skip current user.
+                            if (id == currentUserId) continue
+
+                            val name = userSnapshot.child("name").getValue(String::class.java) ?: ""
+                            val base64Image = userSnapshot.child("Images").child("Image1").getValue(String::class.java) ?: ""
+
+                            val user = AppUser(id, name, "", base64Image, 0)
+                            usersToFetch.add(user)
+                        }
+
+                        if (usersToFetch.isNotEmpty()) {
+                            fetchLastMessages(usersToFetch) { updatedUsers ->
+                                userAdapter.updateUserList(updatedUsers)
+                            }
+                        } else {
+                            // If no friends are found, clear the list.
+                            userAdapter.updateUserList(emptyList())
+                        }
                     }
-                }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e("Firebase", "Error fetching users", error.toException())
+                    }
+                })
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e("Firebase", "Error fetching users", error.toException())
+                Log.e("Firebase", "Error fetching friend list", error.toException())
             }
         })
     }
+
     private fun fetchLastMessages(users: List<AppUser>, callback: (List<AppUser>) -> Unit) {
         val updatedUsers = mutableListOf<AppUser>()
         val usersProcessed = mutableSetOf<String>()

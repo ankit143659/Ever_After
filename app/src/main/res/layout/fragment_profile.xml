@@ -87,5 +87,21 @@
             android:layout_gravity="center"
             android:padding="5dp"/>
 
+
+
+        <!-- Login Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogOut"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Log Out"
+            android:fontFamily="@font/font1"
+            android:textSize="22sp"
+            android:background="@drawable/btn_bg"
+            app:backgroundTint="@null"
+            app:cornerRadius="12dp"
+            android:textColor="@android:color/white"
+            android:layout_below="@id/cpasswordLayout"
+            android:layout_marginTop="20dp"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

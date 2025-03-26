@@ -1,7 +1,5 @@
 package com.example.ever_after
 
-import android.app.NotificationManager
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,25 +7,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.app.NotificationCompat
 import androidx.fragment.app.Fragment
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
 import com.google.android.material.card.MaterialCardView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.OkHttpClient
-import okhttp3.Request
-import okhttp3.RequestBody.Companion.toRequestBody
-import org.json.JSONObject
-import java.io.IOException
 
 class Notification : Fragment() {
 
@@ -43,68 +26,65 @@ class Notification : Fragment() {
         val view = inflater.inflate(R.layout.fragment_notification, container, false)
         requestContainer = view.findViewById(R.id.requestContainer)
 
-        loadAcceptedRequests()
-        listenForNewRequests()
+        // Listen to the receiver's Requests node only.
+        // (Make sure that when a request is sent, it is written only under the receiver's Requests node.)
+        listenForRequests()
         return view
     }
 
-    private fun loadAcceptedRequests() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        requestRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Requests")
+    private fun listenForRequests() {
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        // Reference to current user's Requests and Friends nodes.
+        requestRef = FirebaseDatabase.getInstance().reference
+            .child("Users").child(currentUserId).child("Requests")
+        val friendRef = FirebaseDatabase.getInstance().reference
+            .child("Users").child(currentUserId).child("Friends")
         userRef = FirebaseDatabase.getInstance().reference.child("Users")
 
-        requestRef.addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                requestContainer.removeAllViews() // ✅ Clear previous views
+        // First, fetch the current user's Friends list.
+        friendRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(friendSnapshot: DataSnapshot) {
+                // Build a set of friend IDs for quick lookup.
+                val friendIds = mutableSetOf<String>()
+                for (friend in friendSnapshot.children) {
+                    friend.key?.let { friendIds.add(it) }
+                }
 
-                for (request in snapshot.children) {
-                    val senderId = request.child("senderId").getValue(String::class.java) ?: continue
-                    val status = request.child("status").getValue(String::class.java)
+                // Now listen to the Requests node.
+                requestRef.addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(requestSnapshot: DataSnapshot) {
+                        requestContainer.removeAllViews() // Clear UI before updating
 
-                    if (status == "accepted") {
-                        fetchSenderName(senderId, request.key!!)
+                        for (request in requestSnapshot.children) {
+                            // Get the sender's ID from the request.
+                            val senderId = request.child("senderId").getValue(String::class.java) ?: continue
+                            // Check if the sender's ID is already in the Friends list.
+                            val isAccepted = friendIds.contains(senderId)
+
+                            // Call fetchSenderName to build the UI.
+                            fetchSenderName(senderId, request.key!!, isAccepted)
+                        }
                     }
-                }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        Log.e(TAG, "Failed to fetch requests: ${error.message}")
+                    }
+                })
             }
 
             override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Failed to fetch accepted requests: ${error.message}")
+                Log.e(TAG, "Failed to fetch friend list: ${error.message}")
             }
         })
     }
 
-
-    private fun listenForNewRequests() {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
-        requestRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Requests")
-        userRef = FirebaseDatabase.getInstance().reference.child("Users")
-        requestRef.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val senderId = snapshot.child("senderId").getValue(String::class.java) ?: return
-                val status = snapshot.child("status").getValue(String::class.java)
-                val reciverId = snapshot.child("reciverId").getValue(String::class.java)
-                if (status != "accepted") {
-                    fetchSenderName(senderId, snapshot.key!!)
-                      // ✅ New request par notification bhejna
-                }
-            }
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onChildRemoved(snapshot: DataSnapshot) {}
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-            override fun onCancelled(error: DatabaseError) {
-                Log.e(TAG, "Database error: ${error.message}")
-            }
-        })
-    }
-
-
-
-    private fun fetchSenderName(senderId: String, requestId: String) {
+    private fun fetchSenderName(senderId: String, requestId: String, isAccepted: Boolean) {
         userRef.child(senderId).child("name")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    snapshot.getValue(String::class.java)?.let {
-                        addRequestUI(it, senderId, requestId)
+                    snapshot.getValue(String::class.java)?.let { senderName ->
+                        addRequestUI(senderName, senderId, requestId, isAccepted)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -113,104 +93,96 @@ class Notification : Fragment() {
             })
     }
 
-    private fun addRequestUI(senderName: String, senderId: String, requestId: String) {
+    private fun addRequestUI(senderName: String, senderId: String, requestId: String, isAccepted: Boolean) {
         if (!isAdded || activity == null) return
 
         requireActivity().runOnUiThread {
             val requestView = LayoutInflater.from(requireContext())
                 .inflate(R.layout.request_design, requestContainer, false)
 
-            val username = requestView.findViewById<TextView>(R.id.username)
+            val usernameText = requestView.findViewById<TextView>(R.id.username)
             val acceptButton = requestView.findViewById<MaterialCardView>(R.id.btn_accept)
             val rejectButton = requestView.findViewById<MaterialCardView>(R.id.btn_reject)
-            val status = requestView.findViewById<TextView>(R.id.status)
+            val statusText = requestView.findViewById<TextView>(R.id.status)
 
-            username.text = senderName
+            usernameText.text = senderName
 
-            val senderRef = FirebaseDatabase.getInstance().reference.child("Users")
-                .child(senderId).child("Requests").child(requestId)
+            if (isAccepted) {
+                // If the sender's ID is in the Friends list, show accepted state.
+                acceptButton.visibility = View.GONE
+                rejectButton.visibility = View.GONE
+                statusText.text = "Friend"
+                statusText.visibility = View.VISIBLE
+            } else {
+                // Otherwise, show Accept/Reject buttons.
+                acceptButton.visibility = View.VISIBLE
+                rejectButton.visibility = View.VISIBLE
+                statusText.visibility = View.GONE
 
-            // Fetch request status to update UI correctly
-            senderRef.child("status").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-                    val requestStatus = snapshot.getValue(String::class.java)
-
-                    if (requestStatus == "accepted") {
-                        acceptButton.visibility = View.GONE
-                        rejectButton.visibility = View.GONE
-                        status.text = "Accepted"
-                        status.visibility = View.VISIBLE
-                    } else {
-                        acceptButton.visibility = View.VISIBLE
-                        rejectButton.visibility = View.VISIBLE
-                        status.visibility = View.GONE
-                    }
+                acceptButton.setOnClickListener {
+                    updateRequestStatus(requestId, senderId, acceptButton, rejectButton, statusText)
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-                    Log.e(TAG, "Failed to fetch request status: ${error.message}")
+                rejectButton.setOnClickListener {
+                    rejectFriendRequest(requestId, acceptButton, rejectButton, statusText)
                 }
-            })
-
-            acceptButton.setOnClickListener {
-                updateRequestStatus(requestId, senderRef, "accepted", acceptButton, rejectButton, status)
-            }
-
-            rejectButton.setOnClickListener {
-                removeRequest(requestId, senderRef, acceptButton, rejectButton, status)
             }
 
             requestContainer.addView(requestView)
         }
     }
 
-
     private fun updateRequestStatus(
         requestId: String,
-        senderRef: DatabaseReference,
-        newStatus: String,
+        senderId: String,
         acceptButton: MaterialCardView,
         rejectButton: MaterialCardView,
-        status: TextView
+        statusText: TextView
     ) {
-        requestRef.child(requestId).child("status").setValue(newStatus)
-            .addOnCompleteListener { task1 ->
-                if (task1.isSuccessful) {
-                    senderRef.child(requestId).child("status").setValue(newStatus)
+        val currentUserId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        // 1. Update the request status in the receiver's Requests node.
+        requestRef.child(requestId).child("status").setValue("accepted")
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // 2. Add to both users' Friends node.
+                    val currentUserFriendsRef = FirebaseDatabase.getInstance().reference
+                        .child("Users").child(currentUserId).child("Friends")
+                    val senderFriendsRef = FirebaseDatabase.getInstance().reference
+                        .child("Users").child(senderId).child("Friends")
+
+                    currentUserFriendsRef.child(senderId).setValue(true)
                         .addOnCompleteListener { task2 ->
                             if (task2.isSuccessful) {
-                                acceptButton.visibility = View.GONE
-                                rejectButton.visibility = View.GONE
-                                status.text = newStatus.capitalize()
-                                status.visibility = View.VISIBLE
+                                senderFriendsRef.child(currentUserId).setValue(true)
+                                    .addOnCompleteListener { task3 ->
+                                        if (task3.isSuccessful) {
+                                            acceptButton.visibility = View.GONE
+                                            rejectButton.visibility = View.GONE
+                                            statusText.text = "Friend"
+                                            statusText.visibility = View.VISIBLE
+                                        }
+                                    }
                             }
                         }
                 }
             }
     }
 
-    private fun removeRequest(
+    // Remove the request from the receiver's Requests node on reject.
+    private fun rejectFriendRequest(
         requestId: String,
-        senderRef: DatabaseReference,
         acceptButton: MaterialCardView,
         rejectButton: MaterialCardView,
-        status: TextView
+        statusText: TextView
     ) {
-        requestRef.child(requestId).removeValue().addOnCompleteListener { task1 ->
-            if (task1.isSuccessful) {
-                senderRef.child(requestId).removeValue().addOnCompleteListener { task2 ->
-                    if (task2.isSuccessful) {
-                        acceptButton.visibility = View.GONE
-                        rejectButton.visibility = View.GONE
-                        status.text = "Rejected"
-                        status.visibility = View.VISIBLE
-                    }
-                }
+        requestRef.child(requestId).removeValue().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                acceptButton.visibility = View.GONE
+                rejectButton.visibility = View.GONE
+                statusText.text = "Rejected"
+                statusText.visibility = View.VISIBLE
             }
         }
     }
-
-
-
-
 }
