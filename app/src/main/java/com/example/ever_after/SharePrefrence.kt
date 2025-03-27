@@ -17,6 +17,9 @@ class SharePrefrence(context: Context){
     fun checkLoginState():Boolean{
         return prefs.getBoolean("loginState",false)
     }
+    fun logoutUser() {
+        prefs.edit().clear().apply() // सभी डेटा Clear कर देगा
+    }
 
     fun name(name : String){
         val editor = prefs.edit()

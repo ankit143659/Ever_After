@@ -1,5 +1,6 @@
 package com.example.ever_after
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -11,9 +12,12 @@ import android.view.ViewGroup
 import android.widget.GridLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
+import com.google.android.material.button.MaterialButton
+import com.google.android.material.imageview.ShapeableImageView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import java.io.ByteArrayInputStream
@@ -25,6 +29,9 @@ class Profile : Fragment() {
     private lateinit var emailTextView: TextView
     private lateinit var phoneTextView: TextView
     private lateinit var gridLayout: GridLayout
+    private lateinit var sharedPref: SharePrefrence
+    private lateinit var btnLogOut: MaterialButton
+    private lateinit var profile_image: ShapeableImageView
     // Use the actual userId dynamically
 
     override fun onCreateView(
@@ -39,12 +46,23 @@ class Profile : Fragment() {
         database = userId?.let { FirebaseDatabase.getInstance().getReference("Users").child(it) }!!
 
         // Initialize Views
+        sharedPref = SharePrefrence(requireContext())
         usernameTextView = view.findViewById(R.id.username)
         emailTextView = view.findViewById(R.id.bio) // Assuming bio TextView is for email
         phoneTextView = view.findViewById(R.id.friends_count) // Assuming friends_count is for phone
         gridLayout = view.findViewById(R.id.gridLayout)
+        btnLogOut = view.findViewById(R.id.btnLogOut)
+        profile_image = view.findViewById(R.id.profile_image)
 
         fetchUserData()
+        btnLogOut.setOnClickListener {
+            FirebaseAuth.getInstance().signOut()
+            sharedPref.logoutUser()
+            Toast.makeText(requireContext(), "Logged out successfully!", Toast.LENGTH_SHORT).show()
+            val intent = Intent(requireContext(), login_page::class.java)
+            startActivity(intent)
+            requireActivity().finish()
+        }
 
         return view
     }
@@ -62,6 +80,9 @@ class Profile : Fragment() {
                     phoneTextView.text = phone
 
                     val imagesSnapshot = snapshot.child("Images")
+                    val image1=imagesSnapshot.child("Image1").getValue(String::class.java)
+                    profile_image.setImageBitmap(image1?.let { decodeBase64ToBitmap(it) })
+
                     val imageUrls = mutableListOf<String>()
 
                     for (image in imagesSnapshot.children) {
