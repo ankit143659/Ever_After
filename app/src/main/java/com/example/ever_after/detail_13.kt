@@ -126,8 +126,29 @@ class detail_13 : Fragment() {
     }
 
     private suspend fun encodeToBase64(bitmap: Bitmap): String = withContext(Dispatchers.IO) {
+        val scaledBitmap = compressBitmap(bitmap, 800) // Resize and compress
         ByteArrayOutputStream().apply {
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, this)
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 40, this) // JPEG 60% quality
         }.toByteArray().let { Base64.encodeToString(it, Base64.DEFAULT) }
     }
+
+    private fun compressBitmap(bitmap: Bitmap, maxSize: Int): Bitmap {
+        val width = bitmap.width
+        val height = bitmap.height
+        val aspectRatio = width.toFloat() / height.toFloat()
+
+        val newWidth: Int
+        val newHeight: Int
+
+        if (width > height) {
+            newWidth = maxSize
+            newHeight = (maxSize / aspectRatio).toInt()
+        } else {
+            newHeight = maxSize
+            newWidth = (maxSize * aspectRatio).toInt()
+        }
+
+        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true)
+    }
+
 }
