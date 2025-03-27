@@ -1,107 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="12dp"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="25dp"
+    app:cardElevation="14dp"
     android:padding="16dp"
-    android:layout_margin="16dp"
     android:background="@color/white">
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        app:cardCornerRadius="25dp"
+        app:cardElevation="14dp"
+        android:padding="16dp"
+        android:layout_margin="10dp"
+        android:background="@drawable/round_button_bg"
+        app:cardBackgroundColor="@android:color/white">
 
-        <!-- Profile Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:paddingBottom="16dp">
+            android:padding="20dp"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/profile_image"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/logo"
-                android:scaleType="centerCrop"
-                android:background="@drawable/image_circle"
-                android:elevation="8dp" />
-
+            <!-- Profile Section -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="16dp">
+                android:orientation="horizontal"
+                android:paddingBottom="16dp">
 
-                <TextView
-                    android:id="@+id/username"
+                <ImageView
+                    android:id="@+id/profile_image"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/logo"
+                    android:scaleType="centerCrop"
+                    android:clipToOutline="true"
+                    android:background="@drawable/circle_bg" />
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Username"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/font1"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:orientation="vertical"
+                    android:layout_marginStart="16dp">
 
-                <TextView
-                    android:id="@+id/friends_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Friends: 99"
-                    android:textColor="@color/black"
-                    android:fontFamily="@font/font2"
-                    android:textSize="16sp" />
+                    <TextView
+                        android:id="@+id/username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Username"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/font1"
+                        android:textSize="24sp"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/friends_count"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Friends: 99"
+                        android:textColor="@color/black"
+                        android:fontFamily="@font/font1"
+                        android:textSize="16sp"/>
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- Bio Section -->
+            <TextView
+                android:id="@+id/bio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="This is the bio section where user details can be added."
+                android:textSize="16sp"
+                android:textColor="@color/black"
+                android:paddingBottom="10dp"
+                android:fontFamily="@font/font1"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="20dp"/>
+
+            <!-- 🔥 Grid Layout for Dynamic Images -->
+            <GridLayout
+                android:id="@+id/gridLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="3"
+                android:layout_gravity="center"
+                android:padding="5dp"/>
+
+            <!-- Logout Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogOut"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:text="Log Out"
+                android:fontFamily="@font/font1"
+                android:textSize="20sp"
+                android:textAllCaps="false"
+                android:background="@drawable/btn_bg"
+                app:backgroundTint="@null"
+                app:cornerRadius="15dp"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="20dp"
+                android:elevation="8dp"/>
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-        <!-- Bio Section -->
-        <TextView
-            android:id="@+id/bio"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="This is the bio section where user details can be added."
-            android:textSize="16sp"
-            android:textColor="@android:color/white"
-            android:paddingBottom="10dp"
-            android:fontFamily="@font/font2" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:background="@android:color/darker_gray"
-            android:layout_marginBottom="20dp"/>
-
-        <!-- 🔥 Grid Layout for Dynamic Images -->
-        <GridLayout
-            android:id="@+id/gridLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:columnCount="3"
-            android:layout_gravity="center"
-            android:padding="5dp"/>
-
-
-
-        <!-- Login Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogOut"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:text="Log Out"
-            android:fontFamily="@font/font1"
-            android:textSize="22sp"
-            android:background="@drawable/btn_bg"
-            app:backgroundTint="@null"
-            app:cornerRadius="12dp"
-            android:textColor="@android:color/white"
-            android:layout_below="@id/cpasswordLayout"
-            android:layout_marginTop="20dp"/>
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+</LinearLayout>

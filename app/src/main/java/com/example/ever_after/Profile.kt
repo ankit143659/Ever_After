@@ -27,11 +27,11 @@ class Profile : Fragment() {
     private lateinit var database: DatabaseReference
     private lateinit var usernameTextView: TextView
     private lateinit var emailTextView: TextView
-    private lateinit var phoneTextView: TextView
+    private lateinit var friendCount: TextView
     private lateinit var gridLayout: GridLayout
     private lateinit var sharedPref: SharePrefrence
     private lateinit var btnLogOut: MaterialButton
-    private lateinit var profile_image: ShapeableImageView
+    private lateinit var profile_image: ImageView
     // Use the actual userId dynamically
 
     override fun onCreateView(
@@ -49,7 +49,7 @@ class Profile : Fragment() {
         sharedPref = SharePrefrence(requireContext())
         usernameTextView = view.findViewById(R.id.username)
         emailTextView = view.findViewById(R.id.bio) // Assuming bio TextView is for email
-        phoneTextView = view.findViewById(R.id.friends_count) // Assuming friends_count is for phone
+        friendCount = view.findViewById(R.id.friends_count) // Assuming friends_count is for phone
         gridLayout = view.findViewById(R.id.gridLayout)
         btnLogOut = view.findViewById(R.id.btnLogOut)
         profile_image = view.findViewById(R.id.profile_image)
@@ -71,27 +71,32 @@ class Profile : Fragment() {
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
-                    val name = snapshot.child("name").getValue(String::class.java)
-                    val email = snapshot.child("email").getValue(String::class.java)
-                    val phone = snapshot.child("phone").getValue(String::class.java)
+                    val name = snapshot.child("name").getValue(String::class.java) ?: "N/A"
+                    val email = snapshot.child("email").getValue(String::class.java) ?: "N/A"
+                    val phone = snapshot.child("phone").getValue(String::class.java) ?: "N/A"
 
+                    // Display all details in the bio section
+                    val userDetails = "Email: $email\nPhone: $phone"
                     usernameTextView.text = name
-                    emailTextView.text = email
-                    phoneTextView.text = phone
+                    emailTextView.text = userDetails
 
-                    val imagesSnapshot = snapshot.child("Images")
-                    val image1=imagesSnapshot.child("Image1").getValue(String::class.java)
+                    // Fetch and count friends
+                    val friendsSnapshot = snapshot.child("Friends")
+                    val friendCountValue = friendsSnapshot.childrenCount.toInt()
+                    friendCount.text = "Friends: $friendCountValue"
+
+                    // Fetch profile image
+                    val image1 = snapshot.child("Images/Image1").getValue(String::class.java)
                     profile_image.setImageBitmap(image1?.let { decodeBase64ToBitmap(it) })
 
+                    // Fetch and display grid images
                     val imageUrls = mutableListOf<String>()
-
-                    for (image in imagesSnapshot.children) {
+                    for (image in snapshot.child("Images").children) {
                         val imageUrl = image.getValue(String::class.java)
                         if (!imageUrl.isNullOrEmpty()) {
                             imageUrls.add(imageUrl)
                         }
                     }
-
                     displayImages(imageUrls)
                 }
             }
@@ -101,6 +106,7 @@ class Profile : Fragment() {
             }
         })
     }
+
 
     private fun displayImages(imageUrls: List<String>) {
         gridLayout.removeAllViews()

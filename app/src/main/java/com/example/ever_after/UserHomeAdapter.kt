@@ -1,5 +1,6 @@
 package com.example.ever_after
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -20,6 +21,7 @@ import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.button.MaterialButton
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -50,9 +52,9 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         val religion: TextView = view.findViewById(R.id.religion)
         val match_percentage: TextView = view.findViewById(R.id.match_percentage)
 //        val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
-        val like_button : ImageButton = view.findViewById(R.id.like_button)
-        val Chat_Button: ImageButton = view.findViewById(R.id.Detail_Button)
-        val Dis_like: ImageButton = view.findViewById(R.id.dislike_button)
+        val like_button : MaterialButton = view.findViewById(R.id.like_button)
+        val Chat_Button: MaterialButton = view.findViewById(R.id.detail_button)
+        val Dis_like: MaterialButton = view.findViewById(R.id.dislike_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -61,6 +63,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         return ViewHolder(view)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val user = userList[position]
@@ -181,8 +184,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     private fun sendRequest(
         senderId: String,
         receiverId: String,
-        sendRequestButton: ImageButton,
-        Dis_like:ImageButton
+        sendRequestButton: MaterialButton,
+        Dis_like:MaterialButton
     ) {
         val database = FirebaseDatabase.getInstance().reference
 
@@ -238,8 +241,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     private fun checkRequestStatus(
         senderId: String,
         receiverId: String,
-        sendRequestButton: ImageButton,
-        Dis_like: ImageButton
+        sendRequestButton: MaterialButton,
+        Dis_like: MaterialButton
     ) {
         val senderRequestRef = FirebaseDatabase.getInstance()
             .getReference("Users")
@@ -250,7 +253,10 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (requestSnapshot in snapshot.children) {
                     val request = requestSnapshot.getValue(RequestModel::class.java)
-                    if (request?.receiverId == receiverId) {
+                    val senderId = requestSnapshot.child("senderId").getValue(String::class.java)
+                    val auth = FirebaseAuth.getInstance().currentUser
+                    val userId = auth?.uid
+                    if (request?.receiverId == receiverId && userId == senderId) {
                         if (request.status == "accepted") {
                             Dis_like.visibility = View.GONE  // ✅ Chat Button Show
                             sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
