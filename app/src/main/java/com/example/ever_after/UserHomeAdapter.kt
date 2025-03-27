@@ -74,9 +74,9 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
             fragment.show((holder.itemView.context as AppCompatActivity).supportFragmentManager, "profileBottomSheet")
         }
 
-//        val layoutParams = holder.itemView.layoutParams
-//        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
-//        holder.itemView.layoutParams = layoutParams
+        val layoutParams = holder.itemView.layoutParams
+        layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        holder.itemView.layoutParams = layoutParams
 
         // **Decode Base64 Image**
         val profileBitmap = decodeBase64ToBitmap(user.Image1)
@@ -243,7 +243,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     ) {
         val senderRequestRef = FirebaseDatabase.getInstance()
             .getReference("Users")
-            .child(senderId)
+            .child(receiverId)
             .child("Requests")
 
         senderRequestRef.addListenerForSingleValueEvent(object : ValueEventListener {
@@ -252,11 +252,15 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     val request = requestSnapshot.getValue(RequestModel::class.java)
                     if (request?.receiverId == receiverId) {
                         if (request.status == "accepted") {
-//                            Dis_like.visibility = View.GONE  // ✅ Chat Button Show
-//                            sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
+                            Dis_like.visibility = View.GONE  // ✅ Chat Button Show
+                            sendRequestButton.visibility = View.GONE  // ❌ Hide Send Request Button
                         } else if (request.status == "pending") {
                            // sendRequestButton.text = "Request Sent"
-//                            sendRequestButton.isEnabled = false
+                        sendRequestButton.isEnabled = false
+                        }
+                        else{
+                            Dis_like.visibility = View.VISIBLE  // ✅ Chat Button Show
+                            sendRequestButton.visibility = View.VISIBLE
                         }
                         return  // ✅ Matching request mil gaya, loop se exit ho jao
                     }

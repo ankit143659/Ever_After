@@ -78,7 +78,6 @@ dependencies {
     implementation ("com.google.auth:google-auth-library-oauth2-http:1.14.0")
     implementation ("com.squareup.okhttp3:okhttp:4.9.3")
     implementation(libs.firebase.messaging.ktx)
-
     annotationProcessor(libs.compiler)
     implementation(libs.glide)
     testImplementation(libs.junit)
