@@ -16,7 +16,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.airbnb.lottie.LottieAnimationView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.messaging.FirebaseMessaging
 
 class login_page : AppCompatActivity() {
@@ -25,6 +29,7 @@ class login_page : AppCompatActivity() {
     private lateinit var lottieAnimationView: LottieAnimationView
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
+    private lateinit var userRef: DatabaseReference
     private lateinit var password: EditText
     private lateinit var share: SharePrefrence
     private lateinit var loadingDialog: Dialog
@@ -132,9 +137,7 @@ class login_page : AppCompatActivity() {
                     loadingDialog.dismiss()
                     share.loginState(true)
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(this, detailsPage::class.java)
-                    startActivity(intent)
-                    finish()
+                    checkUserData()
                 } else {
                     loadingDialog.dismiss()
                     Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
@@ -165,5 +168,37 @@ class login_page : AppCompatActivity() {
 
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    }
+
+    private fun checkUserData() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            navigateTo(LoginPage::class.java)
+            return
+        }
+
+        userRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Images")
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val imageUrl = snapshot.child("Image1").getValue(String::class.java)
+
+                if (imageUrl != null && imageUrl.isNotEmpty()) {
+                    navigateTo(BottomNavigation::class.java)  // Image node hai, to direct BottomNavigation par jayega
+                } else {
+                    navigateTo(detailsPage::class.java)  // Agar login nahi kiya to LoginPage par jayega
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                navigateTo(LoginPage::class.java)
+            }
+        })
+    }
+
+    private fun navigateTo(destination: Class<*>) {
+        val intent = Intent(this, destination)
+        startActivity(intent)
+        finish()
     }
 }

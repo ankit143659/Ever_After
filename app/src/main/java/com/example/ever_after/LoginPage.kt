@@ -13,6 +13,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -22,6 +27,8 @@ class LoginPage : AppCompatActivity() {
     private lateinit var btnGoogle: Button
     private lateinit var googleSignInClient: GoogleSignInClient
     private lateinit var firebaseAuth: FirebaseAuth
+    private lateinit var userRef: DatabaseReference
+
     private val db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,8 +89,7 @@ class LoginPage : AppCompatActivity() {
 
                     // ✅ FCM token update karne ke liye function call
                     user?.uid?.let { updateFCMToken(it) }
-
-                    startActivity(Intent(this, detailsPage::class.java))
+                    checkUserData()
                     finish()
                 } else {
                     Toast.makeText(this, "Authentication Failed!", Toast.LENGTH_SHORT).show()
@@ -114,4 +120,35 @@ class LoginPage : AppCompatActivity() {
             }
     }
 
+    private fun checkUserData() {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid
+        if (userId == null) {
+            navigateTo(LoginPage::class.java)
+            return
+        }
+
+        userRef = FirebaseDatabase.getInstance().reference.child("Users").child(userId).child("Images")
+
+        userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val imageUrl = snapshot.child("Image1").getValue(String::class.java)
+
+                if (imageUrl != null && imageUrl.isNotEmpty()) {
+                    navigateTo(BottomNavigation::class.java)  // Image node hai, to direct BottomNavigation par jayega
+                } else {
+                    navigateTo(detailsPage::class.java)  // Agar login nahi kiya to LoginPage par jayega
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                navigateTo(LoginPage::class.java)
+            }
+        })
+    }
+
+    private fun navigateTo(destination: Class<*>) {
+        val intent = Intent(this, destination)
+        startActivity(intent)
+        finish()
+    }
 }
