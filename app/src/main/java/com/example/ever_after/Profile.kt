@@ -1,6 +1,7 @@
 package com.example.ever_after
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.GridLayout
 import android.widget.ImageButton
 import android.widget.ImageView
@@ -35,6 +37,7 @@ class Profile : Fragment() {
     private lateinit var btnLogOut: MaterialButton
     private lateinit var profile_image: ImageView
     private lateinit var editProfileBtn : ImageButton
+    private lateinit var loadingDialog: Dialog
     // Use the actual userId dynamically
 
     @SuppressLint("MissingInflatedId")
@@ -43,6 +46,8 @@ class Profile : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
+
+        setupLoadingDialog()
 
         // Initialize Firebase Database Reference
         val auth = FirebaseAuth.getInstance().currentUser
@@ -77,10 +82,22 @@ class Profile : Fragment() {
         return view
     }
 
+
+    private fun setupLoadingDialog() {
+        loadingDialog = Dialog(requireContext())
+        loadingDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        loadingDialog.setContentView(R.layout.loading_dialog)  // Custom Lottie Layout
+        loadingDialog.setCancelable(false)
+        loadingDialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+    }
+
+
     private fun fetchUserData() {
+        loadingDialog.show()
         database.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot.exists()) {
+                    loadingDialog.dismiss()
                     val name = snapshot.child("name").getValue(String::class.java) ?: "N/A"
                     val email = snapshot.child("email").getValue(String::class.java) ?: "N/A"
                     val phone = snapshot.child("phone").getValue(String::class.java) ?: "N/A"
@@ -108,10 +125,13 @@ class Profile : Fragment() {
                         }
                     }
                     displayImages(imageUrls)
+                }else{
+                    loadingDialog.dismiss()
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
+                loadingDialog.dismiss()
                 Log.e("FirebaseError", "Error fetching data: ${error.message}")
             }
         })
@@ -133,6 +153,8 @@ class Profile : Fragment() {
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.MATCH_PARENT
                 )
+
+
                 scaleType = ImageView.ScaleType.CENTER_CROP
             }
 
