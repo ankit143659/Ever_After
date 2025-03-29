@@ -7,7 +7,7 @@
     app:cardCornerRadius="25dp"
     app:cardElevation="14dp"
     android:padding="16dp"
-    android:background="@color/white">
+    android:background="@color/black">
 
 
     <androidx.cardview.widget.CardView
@@ -18,7 +18,7 @@
         android:padding="16dp"
         android:layout_margin="10dp"
         android:background="@drawable/round_button_bg"
-        app:cardBackgroundColor="@android:color/white">
+        app:cardBackgroundColor="@color/gray">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,8 +44,9 @@
                     android:background="@drawable/circle_bg" />
 
                 <LinearLayout
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:orientation="vertical"
                     android:layout_marginStart="16dp">
 
@@ -68,6 +69,17 @@
                         android:fontFamily="@font/font1"
                         android:textSize="16sp"/>
                 </LinearLayout>
+
+                <!-- Edit Profile Button -->
+                <ImageButton
+                    android:id="@+id/btnEditProfile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/baseline_edit_24"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Edit Profile"
+                    android:padding="8dp"
+                    app:tint="@color/black" />
             </LinearLayout>
 
             <!-- Bio Section -->

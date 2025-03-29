@@ -1,5 +1,6 @@
 package com.example.ever_after
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -10,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.GridLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -32,8 +34,10 @@ class Profile : Fragment() {
     private lateinit var sharedPref: SharePrefrence
     private lateinit var btnLogOut: MaterialButton
     private lateinit var profile_image: ImageView
+    private lateinit var editProfileBtn : ImageButton
     // Use the actual userId dynamically
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -53,6 +57,12 @@ class Profile : Fragment() {
         gridLayout = view.findViewById(R.id.gridLayout)
         btnLogOut = view.findViewById(R.id.btnLogOut)
         profile_image = view.findViewById(R.id.profile_image)
+        editProfileBtn = view.findViewById(R.id.btnEditProfile)
+
+        editProfileBtn.setOnClickListener{
+            val intent = Intent(requireContext(),EditProfile::class.java)
+            startActivity(intent)
+        }
 
         fetchUserData()
         btnLogOut.setOnClickListener {

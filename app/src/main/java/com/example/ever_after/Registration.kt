@@ -129,6 +129,7 @@ class Registration : AppCompatActivity() {
                 val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
                 saveUserData(userId, Name, PhNo, Email)
             } else {
+                loadingDialog.dismiss()
                 Toast.makeText(this, "Registration Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
             }
         }
