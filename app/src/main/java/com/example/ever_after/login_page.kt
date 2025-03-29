@@ -26,11 +26,13 @@ import com.google.firebase.messaging.FirebaseMessaging
 class login_page : AppCompatActivity() {
     private lateinit var btnLogin: Button
     private lateinit var Forgot: TextView
+    private lateinit var signpage: TextView
     private lateinit var lottieAnimationView: LottieAnimationView
     private lateinit var auth: FirebaseAuth
     private lateinit var email: EditText
-    private lateinit var userRef: DatabaseReference
     private lateinit var password: EditText
+    private lateinit var userRef: DatabaseReference
+
     private lateinit var share: SharePrefrence
     private lateinit var loadingDialog: Dialog
     private val database = FirebaseDatabase.getInstance().reference // ✅ Realtime Database
@@ -50,11 +52,16 @@ class login_page : AppCompatActivity() {
 
         email = findViewById(R.id.etEmail)
         Forgot = findViewById(R.id.tvForgotPassword)
+        signpage = findViewById(R.id.signpage)
         password = findViewById(R.id.etPassword)
 
         setupLoadingDialog()
         Forgot.setOnClickListener {
             showForgotPasswordDialog()
+        }
+        signpage.setOnClickListener {
+            val intent = Intent(this, Registration::class.java)
+            startActivity(intent)
         }
 
         btnLogin.setOnClickListener {
@@ -138,6 +145,9 @@ class login_page : AppCompatActivity() {
                     share.loginState(true)
                     Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show()
                     checkUserData()
+//                    val intent = Intent(this, detailsPage::class.java)
+//                    startActivity(intent)
+//                    finish()
                 } else {
                     loadingDialog.dismiss()
                     Toast.makeText(this, "Login Failed: ${task.exception?.message}", Toast.LENGTH_LONG).show()
@@ -169,7 +179,6 @@ class login_page : AppCompatActivity() {
     private fun isValidEmail(email: String): Boolean {
         return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
     }
-
     private fun checkUserData() {
         val userId = FirebaseAuth.getInstance().currentUser?.uid
         if (userId == null) {
@@ -185,8 +194,10 @@ class login_page : AppCompatActivity() {
 
                 if (imageUrl != null && imageUrl.isNotEmpty()) {
                     navigateTo(BottomNavigation::class.java)  // Image node hai, to direct BottomNavigation par jayega
+                } else if (share.checkLoginState() && !share.checkDetailState()) {
+                    navigateTo(detailsPage::class.java)  // Login kiya but details abhi nahi bhari to detailsPage par jayega
                 } else {
-                    navigateTo(detailsPage::class.java)  // Agar login nahi kiya to LoginPage par jayega
+                    navigateTo(LoginPage::class.java)  // Agar login nahi kiya to LoginPage par jayega
                 }
             }
 
