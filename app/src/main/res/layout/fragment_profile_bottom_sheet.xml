@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="10dp"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@color/white"
+    android:padding="16dp">
+
     <!-- Shimmer Effect Wrapper -->
     <com.facebook.shimmer.ShimmerFrameLayout
         android:id="@+id/shimmerLayout"
@@ -22,241 +23,255 @@
 
             <!-- Profile Image Placeholder -->
             <View
-                android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:background="@android:color/darker_gray"
                 android:layout_gravity="center"
-                android:layout_marginBottom="8dp"/>
+                android:layout_marginBottom="16dp"
+                android:shape="oval"/>
 
             <!-- Name Placeholder -->
             <View
-                android:layout_width="wrap_content"
-                android:layout_height="20dp"
+                android:layout_width="200dp"
+                android:layout_height="24dp"
+                android:background="@android:color/darker_gray"
+                android:layout_marginBottom="12dp"/>
+
+            <!-- Other placeholders -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
                 android:background="@android:color/darker_gray"
                 android:layout_marginBottom="8dp"/>
-
-            <!-- Email Placeholder -->
             <View
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:background="@android:color/darker_gray"
-                android:layout_marginBottom="4dp"/>
-
-            <!-- Phone Placeholder -->
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginBottom="4dp"/>
-
-            <!-- Other Details Placeholder -->
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginBottom="4dp"/>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginBottom="4dp"/>
-
-            <View
-                android:layout_width="wrap_content"
-                android:layout_height="16dp"
-                android:background="@android:color/darker_gray"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="8dp"/>
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
-    <RelativeLayout
+
+    <!-- Profile Content -->
+    <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:visibility="gone"
-        android:id="@+id/detail"
-        android:layout_height="match_parent">
+        android:id="@+id/detail">
 
-    <!-- Profile Image -->
-    <ImageView
-        android:id="@+id/profileImageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:scaleType="fitCenter"
-        android:adjustViewBounds="true"
-        android:src="@drawable/tony"/>
-    <!-- User Name -->
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/profileImageView"
-        android:layout_centerHorizontal="true"
-        android:text="Aryan Singh"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_marginTop="8dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="24dp">
 
-    <!-- Email -->
-    <TextView
-        android:id="@+id/emailTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/nameTextView"
-        android:layout_centerHorizontal="true"
-        android:text="Email: aryan@example.com"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- Profile Image -->
+            <ImageView
+                android:id="@+id/profileImageView"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:scaleType="centerCrop"
+                android:background="@drawable/circle_background"
+                android:padding="4dp"
+                android:src="@drawable/tony"/>
 
-    <!-- Phone Number -->
-    <TextView
-        android:id="@+id/phoneTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/emailTextView"
-        android:layout_centerHorizontal="true"
-        android:text="Phone: +91 9876543210"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- User Name -->
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Aryan Singh"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:layout_marginBottom="8dp"/>
 
-    <!-- Date of Birth -->
-    <TextView
-        android:id="@+id/dobTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/phoneTextView"
-        android:layout_centerHorizontal="true"
-        android:text="DOB: 03/06/2003"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- Divider -->
+            <View
+                android:layout_width="120dp"
+                android:layout_height="2dp"
+                android:background="@color/black"
+                android:layout_gravity="center"
+                android:layout_marginBottom="16dp"/>
 
-    <!-- Gender -->
-    <TextView
-        android:id="@+id/genderTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/dobTextView"
-        android:text="Gender: Man"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- Info Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/rounded_card"
+                android:layout_marginBottom="16dp">
 
-    <!-- Height -->
-    <TextView
-        android:id="@+id/heightTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/genderTextView"
-        android:text="Height: 105 cm"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/emailTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="📧 aryan@example.com"/>
 
-    <!-- Communities -->
-    <TextView
-        android:id="@+id/communitiesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/heightTextView"
-        android:text="Communities: Environmentalism"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/phoneTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="📞 +91 9876543210"/>
 
-    <!-- Interests -->
-    <TextView
-        android:id="@+id/interestsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/communitiesTextView"
-        android:text="Interests: 🖌️ Crafts, 🎭 Art, 💃 Dancing"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/dobTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🎂 03/06/2003"/>
 
-    <!-- Drinking Status -->
-    <TextView
-        android:id="@+id/drinkingStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/interestsTextView"
-        android:text="Drinks: I drink sometimes"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/genderTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="👤 Man"/>
 
-    <!-- Smoking Status -->
-    <TextView
-        android:id="@+id/smokingStatusTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/drinkingStatusTextView"
-        android:text="Smokes: I smoke sometimes"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/heightTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="📏 105 cm"/>
+            </LinearLayout>
 
-    <!-- Meeting Person -->
-    <TextView
-        android:id="@+id/meetingPersonTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/smokingStatusTextView"
-        android:text="Meeting: Man"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- Interests Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/rounded_card"
+                android:layout_marginBottom="16dp">
 
-    <!-- Purpose -->
-    <TextView
-        android:id="@+id/purposeTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/meetingPersonTextView"
-        android:text="Purpose: Date"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Interests"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"/>
 
-    <!-- Religion -->
-    <TextView
-        android:id="@+id/religionTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/purposeTextView"
-        android:text="Religion: Hindu"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/interestsTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🖌️ Crafts, 🎭 Art, 💃 Dancing"/>
 
-    <!-- Values -->
-    <TextView
-        android:id="@+id/valuesTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/religionTextView"
-        android:text="Values: Optimism, Openness, Humor"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:id="@+id/communitiesTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🌍 Environmentalism"/>
+            </LinearLayout>
 
-    <!-- Have Kids -->
-    <TextView
-        android:id="@+id/haveKidsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/valuesTextView"
-        android:text="Have Kids: Don't have kids"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+            <!-- Lifestyle Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/rounded_card"
+                android:layout_marginBottom="16dp">
 
-    <!-- Interest in Kids -->
-    <TextView
-        android:id="@+id/interestForKidsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/haveKidsTextView"
-        android:text="Interested in Kids: Want kids"
-        android:textSize="16sp"
-        android:layout_marginTop="4dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Lifestyle"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"/>
 
-    <!-- Close Button -->
-    <Button
-        android:id="@+id/closeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/interestForKidsTextView"
-        android:layout_centerHorizontal="true"
-        android:text="Close"
-        android:layout_marginTop="16dp"/>
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/drinkingStatusTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🍷 I drink sometimes"/>
 
+                <TextView
+                    android:id="@+id/smokingStatusTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🚬 I smoke sometimes"/>
+            </LinearLayout>
+
+            <!-- Preferences Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/rounded_card"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Preferences"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/meetingPersonTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="💑 Meeting: Man"/>
+
+                <TextView
+                    android:id="@+id/purposeTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🎯 Purpose: Date"/>
+            </LinearLayout>
+
+            <!-- Personal Details Section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:background="@drawable/rounded_card"
+                android:layout_marginBottom="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Personal Details"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/religionTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🛐 Hindu"/>
+
+                <TextView
+                    android:id="@+id/valuesTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="💖 Optimism, Openness, Humor"/>
+
+                <TextView
+                    android:id="@+id/haveKidsTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="👶 Don't have kids"/>
+
+                <TextView
+                    android:id="@+id/interestForKidsTextView"
+                    style="@style/ProfileInfoText"
+                    android:text="🧸 Want kids"/>
+            </LinearLayout>
+
+            <!-- Close Button -->
+            <Button
+                android:id="@+id/closeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Close"
+                android:textColor="@color/white"
+                android:backgroundTint="@color/black"
+                android:layout_marginTop="8dp"
+                android:paddingStart="32dp"
+                android:paddingEnd="32dp"
+                android:paddingTop="12dp"
+                android:paddingBottom="12dp"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
