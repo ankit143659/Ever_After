@@ -4,31 +4,26 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
-import android.graphics.Typeface
 import android.os.Build
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.auth.oauth2.GoogleCredentials
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
-import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -52,9 +47,9 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         val religion: TextView = view.findViewById(R.id.religion)
         val match_percentage: TextView = view.findViewById(R.id.match_percentage)
 //        val interestsLayout: LinearLayout = view.findViewById(R.id.interestsLayout)
-        val like_button : MaterialButton = view.findViewById(R.id.like_button)
+        val like_button : FloatingActionButton = view.findViewById(R.id.like_button)
         val Chat_Button: MaterialButton = view.findViewById(R.id.detail_button)
-        val Dis_like: MaterialButton = view.findViewById(R.id.dislike_button)
+        val Dis_like: FloatingActionButton = view.findViewById(R.id.dislike_button)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -184,8 +179,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     private fun sendRequest(
         senderId: String,
         receiverId: String,
-        sendRequestButton: MaterialButton,
-        Dis_like:MaterialButton
+        sendRequestButton: FloatingActionButton,
+        Dis_like: FloatingActionButton
     ) {
         val database = FirebaseDatabase.getInstance().reference
 
@@ -241,8 +236,8 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     private fun checkRequestStatus(
         senderId: String,
         receiverId: String,
-        sendRequestButton: MaterialButton,
-        Dis_like: MaterialButton
+        sendRequestButton: FloatingActionButton,
+        Dis_like: FloatingActionButton
     ) {
         val senderRequestRef = FirebaseDatabase.getInstance()
             .getReference("Users")

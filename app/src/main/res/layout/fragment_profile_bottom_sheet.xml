@@ -3,8 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:background="@color/black">
 
     <!-- Shimmer Effect Wrapper -->
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -56,26 +55,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
+        android:layout_marginTop="20dp"
         android:id="@+id/detail">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/premium_gradient_bg"
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
-            <!-- Profile Image -->
-            <ImageView
-                android:id="@+id/profileImageView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+            <RelativeLayout
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginTop="30dp"
                 android:layout_gravity="center"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="24dp"
-                android:scaleType="centerCrop"
-                android:background="@drawable/circle_background"
-                android:padding="4dp"
-                android:src="@drawable/tony"/>
+                android:layout_marginBottom="16dp">
+
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:cardCornerRadius="60dp"
+                    app:cardElevation="8dp"
+                    android:background="@android:color/transparent">
+
+                    <ImageView
+                        android:id="@+id/profileImageView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/logo"
+                        android:clipToOutline="true"
+                        android:background="@drawable/circle_bg2" />
+                </androidx.cardview.widget.CardView>
+
+
+            </RelativeLayout>
 
             <!-- User Name -->
             <TextView
@@ -103,7 +118,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/rounded_card"
+                android:layout_margin="10dp"
+                android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
 
                 <TextView
@@ -138,7 +154,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/rounded_card"
+                android:layout_margin="10dp"
+                android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
 
                 <TextView
@@ -167,7 +184,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/rounded_card"
+                android:layout_margin="10dp"
+                android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
 
                 <TextView
@@ -195,8 +213,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:layout_margin="10dp"
                 android:padding="16dp"
-                android:background="@drawable/rounded_card"
+                android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
 
                 <TextView
@@ -225,7 +244,8 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp"
-                android:background="@drawable/rounded_card"
+                android:layout_margin="10dp"
+                android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
 
                 <TextView

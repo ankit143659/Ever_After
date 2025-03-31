@@ -3,8 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:radius="12dp"
     android:elevation="4dp"
-    app:cardCornerRadius="10dp"
+    app:cardCornerRadius="18dp"
     android:padding="10dp"
+    android:backgroundTint="@color/black"
     android:layout_margin="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -14,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:background="#5F0D1555"
+        android:background="@drawable/glass_morphism_bg"
         android:orientation="horizontal">
 
         <ImageView
