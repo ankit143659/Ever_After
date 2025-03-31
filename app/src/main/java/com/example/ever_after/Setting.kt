@@ -1,13 +1,17 @@
 package com.example.ever_after
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Typeface
+import android.graphics.drawable.BitmapDrawable
 import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
@@ -17,6 +21,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.*
 import org.osmdroid.config.Configuration
 import org.osmdroid.util.GeoPoint
@@ -35,9 +40,10 @@ import org.osmdroid.util.MapTileIndex
 class Setting : Fragment() {
 
     private lateinit var mapView: MapView
+    private lateinit var Gender: String
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private val database = FirebaseDatabase.getInstance().getReference("Users")
-    private val userLocations = mutableListOf<Pair<String, GeoPoint>>()
+    private val userLocations = mutableListOf<Triple<String, Pair<String, String>, GeoPoint>>()
     private var currentUserLocation: GeoPoint? = null
     private lateinit var btnToggleMapView: ImageView
     private var isSatelliteView = false
@@ -137,6 +143,7 @@ class Setting : Fragment() {
                     saveUserLocationToFirebase(latitude, longitude)
                     fetchUserLocations()
                     updateMapView()
+                    stopLocationUpdates()
                 }
             }
         }
@@ -144,7 +151,7 @@ class Setting : Fragment() {
 
     private fun updateMapView() {
         if (currentUserLocation != null) {
-            mapView.controller.setZoom(15.0)
+            mapView.controller.setZoom(20.0)
             mapView.controller.setCenter(currentUserLocation)
             mapView.invalidate()
         }
@@ -291,15 +298,18 @@ class Setting : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 userLocations.clear()
 
+                val currentUser = FirebaseAuth.getInstance().currentUser
+                val currentUserId = currentUser?.uid  // Get the Current User ID
+
                 if (currentUserLocation == null) {
                     Log.e("MapFragment", "Current user location is not available!")
                     return
                 }
 
                 for (userSnapshot in snapshot.children) {
+                    val userId = userSnapshot.key  // Each user in Firebase has a unique UID
                     val name = userSnapshot.child("name").getValue(String::class.java) ?: "Unknown"
-                    val User_Gender = userSnapshot.child("Detail").child("Gender").getValue(String::class.java) ?: "Unknown"
-                    Log.d("Gender",User_Gender)
+                    val gender = userSnapshot.child("Details").child("Gender").getValue(String::class.java) ?: "Unknown"  // Get Gender
                     val lat = userSnapshot.child("latitude").getValue(Double::class.java) ?: 0.0
                     val lng = userSnapshot.child("longitude").getValue(Double::class.java) ?: 0.0
 
@@ -307,15 +317,13 @@ class Setting : Fragment() {
                         val location = GeoPoint(lat, lng)
                         val distance = calculateDistance(currentUserLocation!!, location)
 
-                        if (distance <= 30.0) { // Only add users within 30km
-                            userLocations.add(Pair(name, location))
-                        } else {
-                            Log.d("FilterDebug", "$name is $distance km away (outside 30km range)")
+                        if (distance <= 30.0) { // Only show users within 30 km
+                            userLocations.add(Triple(userId!!, name to gender, location))  // Storing Gender with Name
                         }
                     }
                 }
 
-                addUserMarkers()
+                addUserMarkers(currentUserId)  // Passing Current User ID to Markers
                 updateMapView()
             }
 
@@ -325,9 +333,8 @@ class Setting : Fragment() {
         })
     }
 
-
-
-    private fun addUserMarkers() {
+    @SuppressLint("UseCompatLoadingForDrawables")
+    private fun addUserMarkers(currentUserId: String?) {
         if (currentUserLocation == null) {
             Log.e("MapFragment", "Current user location is not available!")
             return
@@ -335,29 +342,72 @@ class Setting : Fragment() {
 
         mapView.overlays.clear()
 
-        for ((name, location) in userLocations) {
+        for ((userId, nameGender, location) in userLocations) {
+            val (name, gender) = nameGender  // Extract Name and Gender
+
             val marker = Marker(mapView)
             marker.position = location
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
 
+            // **Select icon based on gender**
+            val drawableRes = when (gender) {
+                "Man" -> R.drawable.man_icon
+                "Woman" -> R.drawable.woman_icon  // Make sure you have this drawable
+                else -> R.drawable.man_icon  // Fallback icon
+            }
+
+            val drawable = context?.let { ContextCompat.getDrawable(it, drawableRes) }
+            if (drawable is BitmapDrawable) {
+                val scaledDrawable = Bitmap.createScaledBitmap(
+                    drawable.bitmap,
+                    60, 60,
+                    false
+                )
+                marker.icon = BitmapDrawable(resources, scaledDrawable)
+            }
+
             val distance = calculateDistance(currentUserLocation!!, location)
 
-            // Show details inside the marker
-            marker.title = "$name\n(${String.format("%.2f", distance)} km)"
+            // **If this is the current user, show only the name**
+            marker.title = if (currentUserId != null && userId == currentUserId) {
+                name
+            } else {
+                "$name\n(${String.format("%.2f", distance)} km)"
+            }
+            marker.setOnMarkerClickListener { marker, mapView ->
+                if (currentUserId != null && userId == currentUserId) {
+                    // Current user ke marker pe click hone pe kuch nahi hoga
+                    return@setOnMarkerClickListener true
+                }
 
-            // Create a text overlay to show name & distance above the marker
+                // Sirf dusre users ka profile bottom sheet khulega
+                val bottomSheet = ProfileBottomSheetFragment.newInstance(userId)
+                bottomSheet.show(parentFragmentManager, "ProfileBottomSheetFragment")
+                true
+            }
+
+
+
+            // **Text Overlay (To make the name clear)**
             val textOverlay = object : org.osmdroid.views.overlay.Overlay() {
                 override fun draw(c: Canvas, osmv: MapView, shadow: Boolean) {
                     val projection = osmv.projection.toPixels(location, null)
                     val paint = Paint().apply {
-                        color = Color.RED
-                        textSize = 40f
+                        color = Color.WHITE
+                        textSize = 50f
+                        typeface = Typeface.DEFAULT_BOLD
                         isAntiAlias = true
                         textAlign = Paint.Align.CENTER
+                        setShadowLayer(10f, 0f, 0f, Color.BLACK)
                     }
 
-                    // Draw text above the marker
-                    c.drawText("$name (${String.format("%.2f", distance)} km away)", projection.x.toFloat(), projection.y.toFloat() - 60, paint)
+                    val text = if (currentUserId != null && userId == currentUserId) {
+                        name  // Only name
+                    } else {
+                        "$name (${String.format("%.2f", distance)} km)"  // Name + Distance
+                    }
+
+                    c.drawText(text, projection.x.toFloat(), projection.y.toFloat() - 60, paint)
                 }
             }
 
@@ -367,6 +417,7 @@ class Setting : Fragment() {
 
         mapView.invalidate()
     }
+
 
 
 

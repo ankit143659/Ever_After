@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shimmer_auto_start="true"
+        android:visibility="visible"
         app:shimmer_duration="1000">
 
         <LinearLayout
@@ -61,7 +62,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/premium_gradient_bg"
+            android:background="@color/black"
             android:orientation="vertical"
             android:paddingBottom="24dp">
 
@@ -76,6 +77,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:cardCornerRadius="60dp"
+                    android:id="@+id/card"
                     app:cardElevation="8dp"
                     android:background="@android:color/transparent">
 
@@ -101,14 +103,17 @@
                 android:text="Aryan Singh"
                 android:textSize="24sp"
                 android:textStyle="bold"
-                android:textColor="@color/black"
+                android:textColor="@color/red"
                 android:layout_marginBottom="8dp"/>
 
+
             <!-- Divider -->
+
+
             <View
                 android:layout_width="120dp"
                 android:layout_height="2dp"
-                android:background="@color/black"
+                android:background="@color/red"
                 android:layout_gravity="center"
                 android:layout_marginBottom="16dp"/>
 
@@ -121,6 +126,18 @@
                 android:layout_margin="10dp"
                 android:background="@drawable/glass_morphism_bg"
                 android:layout_marginBottom="16dp">
+                <TextView
+                    android:id="@+id/frd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:text="Already Friend"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/red"
+                    android:layout_marginBottom="8dp"/>
+
 
                 <TextView
                     android:id="@+id/emailTextView"
@@ -277,21 +294,32 @@
                     style="@style/ProfileInfoText"
                     android:text="🧸 Want kids"/>
             </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal">
 
             <!-- Close Button -->
             <Button
                 android:id="@+id/closeButton"
-                android:layout_width="wrap_content"
+                android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="Close"
-                android:textColor="@color/white"
-                android:backgroundTint="@color/black"
+                android:layout_weight="1"
+                android:textColor="@color/black"
+                android:backgroundTint="@color/red"
+                android:layout_marginTop="8dp" />
+            <Button
+                android:id="@+id/RequestBtn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginTop="8dp"
-                android:paddingStart="32dp"
-                android:paddingEnd="32dp"
-                android:paddingTop="12dp"
-                android:paddingBottom="12dp"/>
+                android:backgroundTint="@color/red"
+                android:text="SendRequest"
+                android:textColor="@color/black" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

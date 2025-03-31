@@ -35,7 +35,7 @@
             <!-- Gradient Overlay -->
             <View
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="100dp"
                 android:layout_alignParentBottom="true"
                 android:background="@drawable/bottom_gradient"/>
 
@@ -84,29 +84,6 @@
                     android:shadowDx="1"
                     android:shadowDy="1"
                     android:shadowRadius="2"/>
-
-                <!-- Location -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical">
-
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/baseline_location_pin_24"
-                        app:tint="@color/gray" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Tokyo, Japan"
-                        android:textColor="@color/gray"
-                        android:fontFamily="@font/font1"
-                        android:textSize="16sp"
-                        android:layout_marginStart="4dp"/>
-                </LinearLayout>
             </LinearLayout>
 
             <!-- Match Percentage Badge -->

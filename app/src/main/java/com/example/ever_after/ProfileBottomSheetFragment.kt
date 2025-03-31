@@ -8,8 +8,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import com.example.ever_after.databinding.FragmentProfileBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 
 class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
@@ -35,17 +38,119 @@ class ProfileBottomSheetFragment : BottomSheetDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val currentuser= FirebaseAuth.getInstance().currentUser?.uid
 
         database = FirebaseDatabase.getInstance().getReference("Users")
 
         userId?.let {
             fetchUserData(it)
         }
-
+        if (currentuser != null) {
+            fetchRequestStatus(currentuser,userId!!)
+        }
         binding.closeButton.setOnClickListener {
             dismiss()
         }
+        binding.RequestBtn.setOnClickListener {
+            userId?.let { it1 ->
+                if (currentuser != null) {
+                    sendRequest(currentuser, it1)
+                }
+            }
+        }
     }
+    private fun sendRequest(
+        senderId: String,
+        receiverId: String
+    ) {
+        val database = FirebaseDatabase.getInstance().reference
+
+        // Unique auto-generated key for the request (same for both users)
+        val requestKey = database.child("Users").child(senderId).child("Requests").push().key
+
+        if (requestKey != null) {
+            // Request ka data
+            val requestData = mapOf(
+                "senderId" to senderId,
+                "receiverId" to receiverId,
+                "status" to "pending"
+            )
+
+            // Correct path for Firebase update
+            val updates = hashMapOf<String, Any>(
+                "/Users/$receiverId/Requests/$requestKey" to requestData  // Receiver ke under
+            )
+
+            database.updateChildren(updates).addOnSuccessListener {
+                Toast.makeText(
+                   requireContext(),
+                    "Request Sent",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+
+                binding.RequestBtn.text = "Request Sent"
+              binding.RequestBtn.isEnabled = false
+
+            }.addOnFailureListener { e ->
+                Toast.makeText(
+                    requireContext(),
+                    "Failed to send request: ${e.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        } else {
+            Toast.makeText(
+                requireContext(),
+                "Failed to generate request key!",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    private fun fetchRequestStatus(senderId: String, receiverId: String) {
+        val requestRef = database.child(receiverId).child("Requests")
+
+        requestRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (!isAdded) return  // ✅ Fragment Attached Hai Ya Nahi Check Karein
+
+                for (requestSnapshot in snapshot.children) {
+                    val requestSenderId = requestSnapshot.child("senderId").getValue(String::class.java)
+                    val status = requestSnapshot.child("status").getValue(String::class.java)
+
+                    if (requestSenderId == senderId) {
+                        if (!isAdded || _binding == null) return  // ✅ Ensure binding is not null
+
+                        when (status) {
+                            "pending" -> {
+                                binding?.RequestBtn?.text = "Request Sent"
+                                binding?.RequestBtn?.isEnabled = false
+                            }
+                            "accepted" -> {
+                                binding?.RequestBtn?.text = "Friends"
+                                binding?.RequestBtn?.isEnabled = false
+                            }
+                            else -> {
+                                binding?.RequestBtn?.text = "Send Request"
+                                binding?.RequestBtn?.isEnabled = true
+                            }
+                        }
+                        return
+                    }
+                }
+
+                if (!isAdded || _binding == null) return  // ✅ Double Check for Safety
+                binding?.RequestBtn?.text = "Send Request"
+                binding?.RequestBtn?.isEnabled = true
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                if (!isAdded) return  // ✅ Avoid Crash
+                Toast.makeText(requireContext(), "Failed to check request status", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
 
     private fun fetchUserData(userId: String) {
         database.child(userId).addListenerForSingleValueEvent(object : ValueEventListener {

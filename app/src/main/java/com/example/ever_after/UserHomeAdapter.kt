@@ -184,20 +184,17 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     ) {
         val database = FirebaseDatabase.getInstance().reference
 
-        // Unique auto-generated key for the request (same for both users)
-        val requestKey = database.child("Users").child(senderId).child("Requests").push().key
+        val requestKey = database.child("Users").child(receiverId).child("Requests").push().key
 
         if (requestKey != null) {
-            // Request ka data
             val requestData = mapOf(
                 "senderId" to senderId,
                 "receiverId" to receiverId,
                 "status" to "pending"
             )
 
-            // Correct path for Firebase update
             val updates = hashMapOf<String, Any>(
-                "/Users/$receiverId/Requests/$requestKey" to requestData  // Receiver ke under
+                "/Users/$receiverId/Requests/$requestKey" to requestData
             )
 
             database.updateChildren(updates).addOnSuccessListener {
@@ -206,16 +203,13 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
                     "Request Sent",
                     Toast.LENGTH_SHORT
                 ).show()
-                sendNotificationToProvider(receiverId,"New Request","New Friend Requested")
 
-              //  sendRequestButton.text = "Request Sent"
+                sendNotificationToProvider(receiverId, "New Request", "New Friend Requested")
+
+                // ✅ Sirf iss receiver ke liye button disable karo
                 sendRequestButton.isEnabled = false
-                checkRequestStatus(
-                    senderId,
-                    receiverId,
-                    sendRequestButton,
-                    Dis_like
-                )  // ✅ Status Update
+
+                checkRequestStatus(senderId, receiverId, sendRequestButton, Dis_like)
             }.addOnFailureListener { e ->
                 Toast.makeText(
                     sendRequestButton.context,
@@ -233,6 +227,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
     }
 
 
+
     private fun checkRequestStatus(
         senderId: String,
         receiverId: String,
@@ -244,7 +239,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
             .child(receiverId)
             .child("Requests")
 
-        senderRequestRef.addListenerForSingleValueEvent(object : ValueEventListener {
+        senderRequestRef.addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 for (requestSnapshot in snapshot.children) {
                     val request = requestSnapshot.getValue(RequestModel::class.java)
