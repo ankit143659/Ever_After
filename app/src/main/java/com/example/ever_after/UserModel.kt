@@ -7,5 +7,6 @@ data class UserModel(
     val DOB: String = "",
     val Religion: String = "",
     val Interest: String = "", // String format "⚽ Music 🍕 Food 🎮 Gaming"
-    var Image1: String ="" // Base64 encoded
+    var Image1: String ="",
+    var distance: Double = 0.0  // Base64 encoded
 )

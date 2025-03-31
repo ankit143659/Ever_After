@@ -1,6 +1,7 @@
 package com.example.ever_after
 
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,9 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import android.widget.ImageView
 import java.io.ByteArrayOutputStream
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class UserListActivity : AppCompatActivity() {
 
@@ -49,12 +53,12 @@ class UserListActivity : AppCompatActivity() {
 
         // Open chat when user is clicked
         userAdapter = UserAdapter(userList) { user ->
-            val compressedImage = compressBase64Image(user.profileImage)
+            val imagePath = saveBase64ToFile(this, user.profileImage)
             val intent = Intent(this, Chat::class.java).apply {
                 putExtra("senderId", currentUserId)  // Pass sender ID
                 putExtra("receiverId", user.id)     // Pass receiver ID
                 putExtra("receiverName", user.name)
-                putExtra("receiverImage", compressedImage)
+                putExtra("receiverImagePath", imagePath)
             }
             startActivity(intent)
         }
@@ -152,6 +156,19 @@ class UserListActivity : AppCompatActivity() {
                         Log.e("Firebase", "Error fetching last message", error.toException())
                     }
                 })
+        }
+    }
+    private fun saveBase64ToFile(context: Context, base64String: String): String? {
+        return try {
+            val decodedBytes = Base64.decode(base64String, Base64.DEFAULT)
+            val file = File(context.cacheDir, "compressed_image.jpg") // Cache folder me save karega
+            FileOutputStream(file).use { out ->
+                out.write(decodedBytes)
+            }
+            file.absolutePath // File ka path return karega
+        } catch (e: IOException) {
+            Log.e("ChatActivity", "Error saving base64 to file", e)
+            null
         }
     }
 

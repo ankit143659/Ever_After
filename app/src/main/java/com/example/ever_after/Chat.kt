@@ -57,15 +57,24 @@ class Chat : AppCompatActivity() {
         btnBack = findViewById(R.id.btnBack)
 
         receiverImageView = findViewById(R.id.profilePic) // 🔥 Make sure this ID is in XML
+        val receiverImagePath = intent.getStringExtra("receiverImagePath")
 
-        val receiverImage = intent.getStringExtra("receiverImage")
+        Log.d("ChatActivity", "Received Image Path: $receiverImagePath") // ✅ Debug ke liye
 
-        if (!receiverImage.isNullOrEmpty()) {
-            val bitmap = decodeBase64ToBitmap(receiverImage)
+        if (!receiverImagePath.isNullOrEmpty()) {
+            val bitmap = BitmapFactory.decodeFile(receiverImagePath) // File se Bitmap load kar
             if (bitmap != null) {
-                receiverImageView.setImageBitmap(bitmap) // ✅ Set Image at the top
+                receiverImageView.setImageBitmap(bitmap) // ✅ Agar image mili, to set karo
+            } else {
+                Log.e("ChatActivity", "Bitmap loading failed!") // ✅ Agar bitmap null ho to log error
+                receiverImageView.setImageResource(R.drawable.tony) // Default image
             }
+        } else {
+            Log.e("ChatActivity", "Image Path is NULL or EMPTY!") // ✅ Agar path null hai to error log karo
+            receiverImageView.setImageResource(R.drawable.tony)
         }
+
+
         // Get receiver data from Intent
         receiverId = intent.getStringExtra("receiverId")
         receiverName = intent.getStringExtra("receiverName")

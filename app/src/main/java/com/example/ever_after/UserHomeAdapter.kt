@@ -64,7 +64,7 @@ class UserHomeAdapter(private val userList: MutableList<UserModel>,private val c
         val user = userList[position]
         val age = calculateAge(user.DOB)
         holder.nameText.text = if (age >= 0) "${user.name}, $age" else "${user.name}, Invalid DOB"
-       holder.religion.text = user.Religion
+       holder.religion.text = "${user.distance} Km away"
 
       holder.match_percentage.text = "${user.matchPercentage}%"
         holder.Chat_Button.setOnClickListener {
