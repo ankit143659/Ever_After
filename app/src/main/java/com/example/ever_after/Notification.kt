@@ -1,10 +1,13 @@
 package com.example.ever_after
 
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -18,6 +21,8 @@ class Notification : Fragment() {
     private lateinit var userRef: DatabaseReference
     private lateinit var requestContainer: LinearLayout
     private val TAG = "NotificationFragment"
+
+    private var imageString : String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -84,7 +89,7 @@ class Notification : Fragment() {
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     snapshot.getValue(String::class.java)?.let { senderName ->
-                        addRequestUI(senderName, senderId, requestId, isAccepted)
+                        fetchProfileImage(senderId, senderName, requestId, isAccepted)
                     }
                 }
                 override fun onCancelled(error: DatabaseError) {
@@ -93,7 +98,38 @@ class Notification : Fragment() {
             })
     }
 
-    private fun addRequestUI(senderName: String, senderId: String, requestId: String, isAccepted: Boolean) {
+
+    private fun fetchProfileImage(senderId: String, senderName: String, requestId: String, isAccepted: Boolean) {
+        userRef.child(senderId).child("Images").child("Image1")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val base64String = snapshot.getValue(String::class.java)
+                    imageString = base64String!!
+                    val bitmap = base64String?.let { decodeBase64ToBitmap(it) }
+                    if (bitmap != null) {
+                        addRequestUI(senderName, senderId, requestId, isAccepted, bitmap)
+                    }
+                }
+                override fun onCancelled(error: DatabaseError) {
+                    Log.e(TAG, "Failed to fetch profile image: ${error.message}")
+                }
+            })
+    }
+
+
+    private fun decodeBase64ToBitmap(base64Str: String): Bitmap? {
+        return try {
+            val decodedBytes = android.util.Base64.decode(base64Str, android.util.Base64.DEFAULT)
+            BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        } catch (e: IllegalArgumentException) {
+            Log.e(TAG, "Base64 decoding error: ${e.message}")
+            null
+        }
+    }
+
+
+
+    private fun addRequestUI(senderName: String, senderId: String, requestId: String, isAccepted: Boolean,image : Bitmap) {
         if (!isAdded || activity == null) return
 
         requireActivity().runOnUiThread {
@@ -104,6 +140,9 @@ class Notification : Fragment() {
             val acceptButton = requestView.findViewById<MaterialCardView>(R.id.btn_accept)
             val rejectButton = requestView.findViewById<MaterialCardView>(R.id.btn_reject)
             val statusText = requestView.findViewById<TextView>(R.id.status)
+            val profileImage = requestView.findViewById<ImageView>(R.id.profile_image)
+
+            profileImage.setImageBitmap(image)
 
             usernameText.text = senderName
 
@@ -128,8 +167,35 @@ class Notification : Fragment() {
                 }
             }
 
+            requestView.setOnClickListener {
+                fetchUserDetails(senderId,imageString)
+            }
+
             requestContainer.addView(requestView)
         }
+    }
+
+    private fun fetchUserDetails(userId: String, profileBitmap: String) {
+        userRef.child(userId).child("Details").addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userData = HashMap<String, String>()
+                userData["name"] = snapshot.child("name").getValue(String::class.java) ?: "N/A"
+                userData["Gender"] = snapshot.child("Gender").getValue(String::class.java) ?: "N/A"
+                userData["DOB"] = snapshot.child("DOB").getValue(String::class.java) ?: "N/A"
+                userData["Height"] = snapshot.child("Height").getValue(String::class.java) ?: "N/A"
+                userData["Interest"] = snapshot.child("Interest").getValue(String::class.java) ?: "N/A"
+                userData["SmokingStatus"] = snapshot.child("SmokingStatus").getValue(String::class.java) ?: "N/A"
+                userData["DrinkingStatus"] = snapshot.child("DrinkingStatus").getValue(String::class.java) ?: "N/A"
+                userData["Image"]=profileBitmap
+
+                val bottomSheet = UserDetailsBottomSheet.newInstance(userData)
+                bottomSheet.show(parentFragmentManager, "UserDetailsBottomSheet")
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(TAG, "Failed to fetch user details: ${error.message}")
+            }
+        })
     }
 
     private fun updateRequestStatus(
