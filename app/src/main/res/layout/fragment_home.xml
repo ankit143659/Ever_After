@@ -22,13 +22,13 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="500dp"
-                android:background="@color/gray"
-                android:layout_marginBottom="10dp"/>
+                android:layout_marginBottom="10dp"
+                android:background="@color/gray" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:background="@color/gray"/>
+                android:background="@color/gray" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
@@ -41,16 +41,17 @@
         android:visibility="gone"
         android:scrollbars="vertical"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_chat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:contentDescription="Chat"
-        android:src="@android:drawable/ic_dialog_email"
-        android:backgroundTint="@color/red"
-        app:layout_anchor="@id/recycler_view"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"/>
+      <com.google.android.material.floatingactionbutton.FloatingActionButton
+          android:id="@+id/fab_chat"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_margin="16dp"
+          android:contentDescription="Chat"
+          android:src="@drawable/chat"
+          app:backgroundTint="@color/black"
+          android:elevation="6dp"
+          android:layout_alignParentEnd="true"
+          android:layout_alignParentBottom="true"/>
 
-</RelativeLayout>
+
+  </RelativeLayout>

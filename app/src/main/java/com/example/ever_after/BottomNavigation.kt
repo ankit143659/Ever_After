@@ -25,8 +25,8 @@ class BottomNavigation : AppCompatActivity() {
         setContentView(R.layout.activity_bottom_navigation)
 
         // Set Toolbar as ActionBar
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+//        val toolbar: Toolbar = findViewById(R.id.toolbar)
+//        setSupportActionBar(toolbar)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
@@ -44,7 +44,7 @@ class BottomNavigation : AppCompatActivity() {
         bottomNavigationView.setupWithNavController(navController)
 
         // Enable Back Button Support in Toolbar
-        setupActionBarWithNavController(navController)  // Use only after setting the Toolbar
+//        setupActionBarWithNavController(navController)  // Use only after setting the Toolbar
     }
 
     // Handle Up Button in Toolbar
