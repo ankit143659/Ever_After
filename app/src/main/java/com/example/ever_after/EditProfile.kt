@@ -43,11 +43,13 @@ class EditProfile : AppCompatActivity() {
     private lateinit var name : EditText
     private lateinit var phNo : EditText
     private lateinit var dob : EditText
-    private lateinit var meetingPerson : EditText
     private lateinit var btnSaveChanges : MaterialButton
 
     private lateinit var man : MaterialRadioButton
     private lateinit var woman : MaterialRadioButton
+
+    private lateinit var Manbtn : MaterialRadioButton
+    private lateinit var WomanBtn : MaterialRadioButton
 
     private lateinit var database: FirebaseDatabase
     private lateinit var database2: DatabaseReference
@@ -73,6 +75,8 @@ class EditProfile : AppCompatActivity() {
         }
 
     private  var gender : String = ""
+    private  var MeetingPerson : String = ""
+
     @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -84,6 +88,9 @@ class EditProfile : AppCompatActivity() {
         dob = findViewById(R.id.etDob)
         man = findViewById(R.id.rbMale)
         woman = findViewById(R.id.rbFemale)
+
+        Manbtn = findViewById(R.id.rbMan)
+        WomanBtn = findViewById(R.id.rbWoman)
 
         backBtn = findViewById(R.id.btnBack)
 
@@ -121,7 +128,20 @@ class EditProfile : AppCompatActivity() {
                 gender = "Woman"
             }
         }
-        meetingPerson = findViewById(R.id.etMeetingPerson)
+
+        Manbtn.setOnCheckedChangeListener{_,ischeked->
+            if (ischeked){
+                MeetingPerson = "Man"
+            }
+        }
+
+        WomanBtn.setOnCheckedChangeListener{_,isChecked ->
+            if (isChecked){
+               MeetingPerson = "Woman"
+            }
+        }
+
+
         database = FirebaseDatabase.getInstance()
 
         btnSaveChanges = findViewById(R.id.btnSaveChanges)
@@ -214,7 +234,12 @@ class EditProfile : AppCompatActivity() {
                         woman.isChecked = true
                     }
 
-                    meetingPerson.setText(MeetingPerson)
+                    if (MeetingPerson=="Man"){
+                        Manbtn.isChecked = true
+                    }else{
+                        WomanBtn.isChecked = true
+                    }
+
                     dob.setText(Dob)
 
 
@@ -251,7 +276,6 @@ class EditProfile : AppCompatActivity() {
         val Name = name.text.toString().trim()
         val Phno = phNo.text.toString().trim()
         val Dob = dob.text.toString().trim()
-        val Meeting = meetingPerson.text.toString().trim()
 
         val auth = FirebaseAuth.getInstance().currentUser
         val userId = auth?.uid
@@ -272,12 +296,12 @@ class EditProfile : AppCompatActivity() {
             Toast.makeText(this, "Please enter Date in dd/MM/yyyy format", Toast.LENGTH_SHORT).show()
             return
         }
-        if (Meeting.isEmpty()) {
-            Toast.makeText(this, "Please Enter Meeting person field", Toast.LENGTH_SHORT).show()
-            return
-        }
         if (gender.isEmpty()) {
             Toast.makeText(this, "Please select a gender", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (MeetingPerson.isEmpty()) {
+            Toast.makeText(this, "Please select one Person you want to meet", Toast.LENGTH_SHORT).show()
             return
         }
 
@@ -292,7 +316,7 @@ class EditProfile : AppCompatActivity() {
             val userDetails = mapOf(
                 "DOB" to Dob,
                 "Gender" to gender,
-                "MeetingPerson" to Meeting
+                "MeetingPerson" to MeetingPerson
             )
 
             val userDetails2 = mapOf(
